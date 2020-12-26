@@ -13,9 +13,7 @@ router.post(
   '/upload/:userId',
   //TODO : complete body
   [
-    body('title'),
-
-
+    body('title')
   ],
   usersController.createUser
 );
@@ -23,19 +21,5 @@ router.post(
 router.get('/my-uploads/:userId', usersController.getUserUploads);
 
 
-// PUT /users/update-details/{userId}
-// router.put(
-//   '/update-details/:userId',
-//   [
-//     //TODO : AUTHENTICATION
-//     body('title')
-//       .trim()
-//       .isLength({ min: 5 }),
-//     body('content')
-//       .trim()
-//       .isLength({ min: 5 })
-//   ],
-//   usersController.updateUser
-// );
 
 module.exports = router;

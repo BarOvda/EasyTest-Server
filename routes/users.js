@@ -1,5 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
+const isAuth = require('../auth/is-auth');
 const usersController = require('../controllers/users');
 const User = require('../models/user');
 const router = express.Router();
@@ -55,7 +56,7 @@ router.put(
       .trim()
       .not().isEmpty()
       
-  ],
+  ],isAuth,
   usersController.updateUser
 );
 
