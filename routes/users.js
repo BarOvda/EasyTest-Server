@@ -12,7 +12,7 @@ router.get('/all-users', usersController.getUsers);
 // PUT /users/sign-up
 router.put(
   '/sign-up',
-  //TODO : AUTHENTICATION
+
   [
     body('email')
     .isEmail().withMessage('Please enter a valid email')
@@ -35,7 +35,6 @@ router.put(
 );
 // GET /users/login
 router.get('/login',
-  //TODO : AUTHENTICATION
   [
     body('email')
     .isEmail().withMessage('Please enter a valid email'),

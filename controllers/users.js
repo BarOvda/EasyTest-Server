@@ -7,16 +7,19 @@ const { validationResult } = require('express-validator');
 const User = require('../models/user');
 
 exports.getUsers = async (req, res, next) => {
+  const currentPage = req.query.page || 0;
+  const perPage = 10;
   try{
-  const users = User.find();
+    const totalCount = await User.find().countDocuments();
+    const users = await User.find()
+          .skip(currentPage * perPage)
+          .limit(perPage);
   }catch (err){
-    if (!err.statusCode) 
-      err.statusCode = 500;
     next(err);
   }
       res
         .status(200)
-        .json({users: users });
+        .json({users: users,totalItems:totalCount});
 };
 
 exports.createUser = async(req, res, next) => {
@@ -45,11 +48,9 @@ exports.createUser = async(req, res, next) => {
     password:password
   });
   try{
-    const hashedPw =  bcrypt.hash(password,12);
-    const result =  user.save();
+    const hashedPw = await bcrypt.hash(password,12);
+    const result = await user.save();
     }catch(err){
-      if (!err.statusCode) 
-        err.statusCode = 500;     
       next(err);
     }    
   res.status(201).json({user: result});

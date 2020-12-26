@@ -19,8 +19,7 @@ exports.uploadCourse =async (req, res, next) => {
         name: name
       });
     const result = await course.save();
-    res.status(201).json({
-    user: result  });
+    res.status(201).json({user: result });
 };
     
         
