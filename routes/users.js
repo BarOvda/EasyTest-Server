@@ -4,6 +4,20 @@ const isAuth = require('../auth/is-auth');
 const usersController = require('../controllers/users');
 const User = require('../models/user');
 const router = express.Router();
+const fileHandler = require('../helpers/filesHandler');
+const multer = require('multer');
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname.replace(/ /g, '_'));//replace all ' ' with '_'
+  }
+});
+
+var upload = multer({ storage: fileStorage });
+
+
 
 // GET /users/all-users
 router.get('/all-users', usersController.getUsers);
@@ -12,7 +26,7 @@ router.get('/all-users', usersController.getUsers);
 // PUT /users/sign-up
 router.put(
   '/sign-up',
-
+  upload.single('image'),
   [
     body('email')
     .isEmail().withMessage('Please enter a valid email')

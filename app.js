@@ -7,31 +7,14 @@ const usersRoutes = require('./routes/users');
 const coursesRoutes = require('./routes/courses');
 const courseAppRoutes = require('./routes/courseAppearances');
 const examDirectoriesRoutes = require('./routes/examDirectories');
+const summariesRoutes = require('./routes/summaries');
 
 const app = express();
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === 'image/png' ||
-    file.mimetype === 'image/jpg' ||
-    file.mimetype === 'image/jpeg'
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
+
 
 app.use(bodyParser.json()); 
-app.use( multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
-app.use('/images', express.static(path.join(__dirname, 'images')));
+//app.use( multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
+app.use(express.static('public'));//, express.static(path.join(__dirname, 'images')
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -45,6 +28,8 @@ app.use('/users', usersRoutes);
 app.use('/courses', coursesRoutes);
 app.use('/course-appearances', courseAppRoutes);
 app.use('/exam-directories', examDirectoriesRoutes);
+app.use('/summaries', summariesRoutes);
+
 
 app.use((req, res, next) => {res.status(404).json({ message: 'Page not found' });});
 app.use((error, req, res, next) => {

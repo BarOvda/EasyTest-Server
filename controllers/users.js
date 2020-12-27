@@ -36,7 +36,10 @@ exports.createUser = async(req, res, next) => {
     error.statusCode = 422;
     next(error);
   }
-  
+  console.log(req.body);
+  console.log(req.file.path);
+
+
   const imageUrl=req.file.path;
   const email = req.body.email;
   const name = req.body.name;
@@ -48,26 +51,30 @@ exports.createUser = async(req, res, next) => {
     password:password
   });
   try{
-    const hashedPw = await bcrypt.hash(password,12);
+    //const hashedPw = await bcrypt.hash(password,12);
     const result = await user.save();
+    res.status(201).json({user: result});
+
     }catch(err){
       next(err);
     }    
-  res.status(201).json({user: result});
-}
+
+};
 
 exports.loginUser =async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+  console.log(password);
   let loadedUser;
-  const user = User.findOne({email:email});
+  const user = await User.findOne({email:email});
   if (!user) {
     const error = new Error('Could not find user.');
     error.statusCode = 401;
-    throw error;
+    next(error);
   }
   loadedUser = user;
-  const isEqual = bcrypt.compare(password,user.password);  
+
+  const isEqual = await bcrypt.compare(password,user.password);  
   if(!isEqual){
     const error = new Error('Incorrect password.');
     error.statusCode = 401;

@@ -1,1 +1,7 @@
 **/node_modules
+**/public
+/public
+/public/files
+/public/images
+
+

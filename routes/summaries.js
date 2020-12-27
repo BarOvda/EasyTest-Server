@@ -1,24 +1,37 @@
 const express = require('express');
 const { body } = require('express-validator');
+const multer = require('multer');
+
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/files');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname.replace(/ /g, '_'));//replace all ' ' with '_'
+  }
+});
+
+var upload = multer({ storage: fileStorage });
+
 
 const summaryController = require('../controllers/summaries');
 
 const router = express.Router();
 
 // GET /summaries/all-summaries
-router.get('/all-summaries', summaryController.getSummaries);
+//router.get('/all-summaries', summaryController.getSummaries);
 
 // POST /summaries/upload/{userId}
-router.post(
+router.put(
   '/upload/:userId',
-  //TODO : complete body
+  upload.single('file'),
   [
     body('title')
   ],
-  usersController.createUser
+  summaryController.uploadSummary
 );
 // GET /summaries/my-uploads/{userId}
-router.get('/my-uploads/:userId', usersController.getUserUploads);
+//router.get('/my-uploads/:userId', usersController.getUserUploads);
 
 
 
