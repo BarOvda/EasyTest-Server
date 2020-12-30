@@ -9,9 +9,9 @@ const router = express.Router();
 
 
 // GET /exam-directories/{directoryId}
-router.get('/:directoryId', examDirectoriesController.getDirectory);//TODO
+router.get('/:directoryId',isAuth, examDirectoriesController.getDirectory);//TESTED
 // PUT /exam-directories/upload/:courseId ,HEADER Authentication : token
-router.put('/upload/:courseId',isAuth,examDirectoriesController.createDirectory);//TODO
-// PUT /exam-directories/add-summary/{directoryId}/{summaryId}
-router.put('/directory/:directoryId/:summaryId', examDirectoriesController.addFileToDirectory);//TODO
+router.put('/upload/:courseId',isAuth,examDirectoriesController.createDirectory);//TESTED
+// PUT  {directoryId}/{summaryId}
+router.put('/upload-summary/:directoryId/:summaryId',isAuth, examDirectoriesController.addFileToDirectory);//TESTED
 module.exports = router;

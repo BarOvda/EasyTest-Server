@@ -1,7 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const multer = require('multer');
-
+const isAuth = require('../auth/is-auth');
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'public/files');
@@ -10,29 +10,24 @@ const fileStorage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname.replace(/ /g, '_'));//replace all ' ' with '_'
   }
 });
-
 var upload = multer({ storage: fileStorage });
-
-
 const summaryController = require('../controllers/summaries');
-
 const router = express.Router();
 
+
 // GET /summaries/all-summaries
-//router.get('/all-summaries', summaryController.getSummaries);
-
-// POST /summaries/upload/{userId}
-router.put(
-  '/upload/:userId',
-  upload.single('file'),
-  [
-    body('title')
-  ],
-  summaryController.uploadSummary
+router.get('/all-summaries', summaryController.getAllSummaries);//TESTED
+// PUT /summaries/upload
+router.put(//TESTED
+  '/upload'
+  ,isAuth
+  ,upload.single('file')
+  ,[ body('title')]
+  ,summaryController.uploadSummary
 );
-// GET /summaries/my-uploads/{userId}
-//router.get('/my-uploads/:userId', usersController.getUserUploads);
-
-
-
+// GET /summaries/my-uploads
+router.get(//TESTED
+'/my-uploads'
+,isAuth
+, summaryController.getUserUploads);
 module.exports = router;

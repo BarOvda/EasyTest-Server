@@ -6,18 +6,17 @@ const router = express.Router();
 
 //PUT /course-appearances/upload
 router.put(
-    '/upload',
+    '/upload/:courseId',
     [
         body('name')
         .trim()
         .not().isEmpty() 
         ,
-        body('courseId')
-        .not().isEmpty(),
+        
         body('examsDateA')
-        .isDate().withMessage("The date is not valid"),
+        ,
         body('examsDateB')
-        .isDate().withMessage("The date is not valid")
+        //.isDate().withMessage("The date is not valid")
     ],
     coursesAppController.uploadCourseAppearance);
     module.exports = router;

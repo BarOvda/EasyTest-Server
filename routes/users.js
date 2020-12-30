@@ -20,11 +20,11 @@ var upload = multer({ storage: fileStorage });
 
 
 // GET /users/all-users
-router.get('/all-users', usersController.getUsers);
+router.get('/all-users', usersController.getUsers); //TESTED
 // GET /users/directories
 //router.get('/directories/:userId', usersController.getUserDirectories);//TODO
 // PUT /users/sign-up
-router.put(
+router.put( //TESTED Need an update with hash password logic
   '/sign-up',
   upload.single('image'),
   [
@@ -48,7 +48,7 @@ router.put(
   usersController.createUser
 );
 // GET /users/login
-router.get('/login',
+router.get('/login', //TESTED - Need an update with hash password logic
   [
     body('email')
     .isEmail().withMessage('Please enter a valid email'),
@@ -57,7 +57,7 @@ router.get('/login',
       .isLength({ min: 5 })
   ], usersController.loginUser);
 // PUT /users/update-details
-router.put(
+router.put(//TESTED
   '/update-details',
   [
     body('email')

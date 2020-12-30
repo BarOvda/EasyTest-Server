@@ -5,7 +5,7 @@ const Course = require('../models/course');
 const router = express.Router();
 
 //PUT /courses/upload
-router.put(
+router.put(//TESTED
     '/upload',
     [
         body('name')

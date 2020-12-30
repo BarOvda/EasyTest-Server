@@ -14,12 +14,14 @@ exports.getUsers = async (req, res, next) => {
     const users = await User.find()
           .skip(currentPage * perPage)
           .limit(perPage);
+
+      res
+    .status(200)
+    .json({users: users,totalItems:totalCount});
   }catch (err){
     next(err);
   }
-      res
-        .status(200)
-        .json({users: users,totalItems:totalCount});
+      
 };
 
 exports.createUser = async(req, res, next) => {
@@ -66,6 +68,7 @@ exports.loginUser =async (req, res, next) => {
   const password = req.body.password;
   console.log(password);
   let loadedUser;
+  try{
   const user = await User.findOne({email:email});
   if (!user) {
     const error = new Error('Could not find user.');
@@ -74,7 +77,7 @@ exports.loginUser =async (req, res, next) => {
   }
   loadedUser = user;
 
-  const isEqual = await bcrypt.compare(password,user.password);  
+  const isEqual = password===user.password;//await bcrypt.compare(password,user.password);  
   if(!isEqual){
     const error = new Error('Incorrect password.');
     error.statusCode = 401;
@@ -88,14 +91,17 @@ exports.loginUser =async (req, res, next) => {
     {expiresIn:'4h'}
     );
     res.status(200).json({token:token, userId:loadedUser._id.toString()});
+  }catch(err){
+    next(err);
+  }
 };
 
-exports.updateUser = (req, res, next) => { //TODO : Test
+exports.updateUser = async (req, res, next) => { //TODO : Test
  // const password = req.body.password;
   let loadedUser;
-  User.findById(req.body.userId)
-    .then(user => {
-      if (!user) {
+  try{
+    const user = await User.findById(req.userId);
+    if (!user) {
         const error = new Error('Could not find user.');
         error.statusCode = 401;
         throw error;
@@ -112,20 +118,13 @@ exports.updateUser = (req, res, next) => { //TODO : Test
   //   imageUrl = req.file.path;
   //   loadedUser.imageUrl = req.file.path;
   // }
-  return loadedUser.update({
-    password:loadedUser.password,
-  email:loadedUser.email,
-name:loadedUser.name});
-    })
-    .then(result => {
-      res.status(200).json({ user: result });
-    })
-    .catch(err => {
-      if (!err.statusCode) {
-        err.statusCode = 500;
-      }
+  const result = await loadedUser.save();
+    
+    res.status(200).json({ user: result });
+    }catch(err){
+      
       next(err);
-    });
+  }
 };
 
 const clearImage = filePath => {

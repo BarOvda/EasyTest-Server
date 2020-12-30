@@ -9,13 +9,13 @@ const CourseAppearance = require('../models/courseAppearance');
 const Course = require('../models/course');
 
 exports.uploadCourseAppearance =async (req, res, next) => {
-    const courseId = mongoose.Types.ObjectId(req.body.courseId);
+    const courseId = mongoose.Types.ObjectId(req.params.courseId);
     console.log(req.body.courseId);
 
     const errors = validationResult(req);
     try{
     const course= await Course.findById(courseId);
-    }catch (error){
+    }catch (error){//TODO check invalid courseId
       if(!course){
         error.messege = 'course not found.';
         error.statusCode = 422;
@@ -24,8 +24,10 @@ exports.uploadCourseAppearance =async (req, res, next) => {
       }
     }
     const name = req.body.name;
+    console.log(Date.now());
     const examsDateA = new Date(req.body.examsDateA);
     const examsDateB = new Date(req.body.examsDateB);
+    
     const courseAppearance = new CourseAppearance({
         name :name,
         courseId:courseId,
@@ -42,13 +44,8 @@ exports.uploadCourseAppearance =async (req, res, next) => {
     course.appearances.push(result);
     try{
        result = await course.save();
+       res.status(201).json({user: result});
     }catch(err){
-      if (!err.statusCode)
-        err.statusCode = 500;
       next(err);
-    }
-      res.status(201).json({
-        user: result
-      });
-      
+    } 
 }

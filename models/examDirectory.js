@@ -15,7 +15,8 @@ const examDirectorySchema = new Schema({
   pathUrl: {
     type: String,
     required: false
-  },summaries:[{
+  }
+  ,summaries:[{
         type: Schema.Types.ObjectId, 
         ref: 'Summary' 
  }]

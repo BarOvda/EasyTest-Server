@@ -12,73 +12,75 @@ const Summary = require('../models/summary');
 
 exports.createDirectory = async(req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseId);
-    const ownerId = req.body.userId;    
+    const ownerId = req.userId;    
     try{
       const courseExists = await CourseAppearance.exists({_id:courseId});
       const userExists = await User.findById(ownerId);
-    }catch(err){
-      if (!err.statusCode) 
-        err.statusCode = 500;
-      next(err);
+      
+      if(!userExists||!courseExists){
+          const error = new Error('Validation failed.');
+          error.statusCode = 422;
+          error.data=errors.array();
+          next(error);
+      }
+      const examDirectory = new ExamDirectory({
+          owner:ownerId,
+          courseId:courseId
+      })
+      
+      const directory = await examDirectory.save();
+      userExists.examsDirectories.push(directory);
+      const userRes = await userExists.save();
+      res.status(201).json({directory: directory,user:userRes});                
+    }catch(error){
+      next(error);
     }
-
-    if(!userExists||!courseExists){
-        const error = new Error('Validation failed.');
-        error.statusCode = 422;
-        error.data=errors.array();
-        next(error);
-    }
-    const examDirectory = new ExamDirectory({
-        owner:ownerId,
-        courseId:courseId
-    })
-    const directory = await examDirectory.save();
-    userExists.examsDirectories.push(directory);
-    const userRes = await userExists.save();
-    res.status(201).json({directory: directory,user:userRes});                
 };
 
 
 
 exports.getDirectory = async (req, res, next) => {
     const directoryId = mongoose.Types.ObjectId(req.params.directoryId);
+    
     try{
     const directory = await ExamDirectory.findById(directoryId);
+    console.log(directory.owner);
+    console.log(req.userId);
+    if(directory.owner!=req.userId)
+      throw new Error('Autantication failiaure');
+    res.status(200).json({directory: directory });
     }catch(err){
-      if (!err.statusCode) 
-        err.statusCode = 500;
-      next(err);
+      return next(err);
     }
-      res
-        .status(200)
-        .json({directory: directory });
+      
 };
 
 exports.addFileToDirectory = async (req, res, next) => {
     const directoryId = mongoose.Types.ObjectId(req.params.directoryId);  
-    
-    
     const summaryId = mongoose.Types.ObjectId(req.params.summaryId);
+   try{
     const IsSummaryExists = await Summary.exists({_id:summaryId});
     const directory = await ExamDirectory.findById(directoryId);
-    if(!IsSummaryExists){
-      const error = new Error('The summary does not exists.');
-      error.statusCode = 401;
-      error.data=errors.array();
-      next(error);    }
-    if(!directory){
-      const error = new Error('The directory does not exists.');
-      error.statusCode = 401;
-      error.data=errors.array();
-      next(error);    }
-    directory.summaries.push(directoryId);
+    if(!IsSummaryExists)
+      throw new Error('The file does not exists.'); 
+    if(!directory)
+      throw new Error('The directory does not exists.');
+    if(directory.owner!=req.userId)
+      throw new Error('Autantication failiaure');
+    console.log(directory.summaries.indexOf(req.params.summaryId));
+     if(directory.summaries.indexOf(req.params.summaryId)!==-1)
+       throw new Error('The summarie alredy in this directory');
+    
+      directory.summaries.push(summaryId);
+
     const response = await directory.save();
     if(!response)
-        throw new Error('The directory does not exists');
-    res.status(200).json({
-        directory:directory
-    })
-    
+      throw new Error('The directory does not updated.').statusCode(401).data(errors.array()); 
+
+    res.status(200).json({directory:response});
+   }catch(error){
+      next(error);
+   }
 };
 
 
