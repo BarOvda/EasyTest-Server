@@ -61,3 +61,30 @@ exports.getUserUploads = async (req, res, next) => {
       return next(err);
   }
 }
+
+exports.getCourseSummaries = async (req, res, next) => {
+  //const userId = req.userId;
+  const courseId = req.params.courseId;
+
+
+}
+exports.rankUp = async (req, res, next) => {
+  const userId = req.userId;
+  const rank = req.body.rank;
+  const summaryId = mongoose.Types.ObjectId(req.params.summaryId);
+  try{
+  const summary = await Summary.findById(summaryId);
+    if(summary.rankedByUsers.includes(userId))
+      throw new Error('The user alredy ranked this summary');
+  const numberOfRanks = summary.rankedByUsers.length;
+  summary.rank = ((summary.rank*numberOfRanks)+rank)/(numberOfRanks+1);
+  summary.rankedByUsers.push(userId);
+  summary = await summary.save();
+  res.status(200).json({summary:summary});
+  }catch(err){
+    next(err);
+  }
+
+}
+
+

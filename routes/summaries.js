@@ -30,4 +30,16 @@ router.get(//TESTED
 '/my-uploads'
 ,isAuth
 , summaryController.getUserUploads);
+
+// GET /summaries/course-summaries
+router.get(//TODO
+  '/course-summaries/:courseId'
+  ,isAuth
+  , summaryController.getCourseSummaries);
+// PUT /summaries/rank-up
+router.get(//TODO
+  '/rank-up/:summaryId'
+  ,isAuth
+  ,[ body('rank')]
+  , summaryController.rankUp);
 module.exports = router;

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const courseAppearance = require('./courseAppearance');
 
 const Schema = mongoose.Schema;
 
@@ -18,8 +19,24 @@ const summarySchema = new Schema({
   owner:{
      type: Schema.Types.ObjectId, 
      ref: 'User' 
+  },
+  courseAppearance:{
+    type: Schema.Types.ObjectId, 
+     ref: 'CourseAppearance'
   }
-  
+  ,
+  rankedByUsers:[{
+    type: Schema.Types.ObjectId, 
+     ref: 'Users',
+    default:[],
+     required:false
+  }]
+  ,
+  rank:{
+    type: Number, 
+     required:false,
+     default:0
+  }
 });
 
 module.exports = mongoose.model('Summary', summarySchema);

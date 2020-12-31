@@ -5,6 +5,8 @@ const webToken = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
+const ExamDirectory = require('../models/examDirectory');
+
 
 exports.getUsers = async (req, res, next) => {
   const currentPage = req.query.page || 0;
@@ -131,3 +133,24 @@ const clearImage = filePath => {
   filePath = path.join(__dirname, '..', filePath);
   fs.unlink(filePath, err => console.log(err));
 };
+
+exports.getVailidExam = async (req, res, next) => {
+  //const userId = req.userId;
+  console.log('examDirectory');
+  try{
+   const directories = await ExamDirectory.find()//.lte(Date.now())
+   .populate('courseId'
+   , null, 
+   { examsDateA: { $gte:new Date('2020-12-23T22:00:00.000Z') }}, { limit: 5 });
+    directories.forEach(directory=>{
+      if(!directory.courseId)
+          directories.unshift(directory);
+    })
+   console.log(directories);
+   //console.log(directory);
+      res.status(200).json({directory:directories});
+  }catch(err){
+    next(err);
+  }
+}
+

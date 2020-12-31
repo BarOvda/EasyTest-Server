@@ -72,7 +72,10 @@ router.put(//TESTED
   ],isAuth,
   usersController.updateUser
 );
-
+// GET /users/exam
+router.get('/exam', //TESTED - Need an update with hash password logic
+  //isAuth,
+  usersController.getVailidExam);
 
 
 module.exports = router;
