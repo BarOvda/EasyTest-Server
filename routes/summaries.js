@@ -31,12 +31,12 @@ router.get(//TESTED
 ,isAuth
 , summaryController.getUserUploads);
 
-// GET /summaries/course-summaries
+// GET /summaries/course-summaries/:courseId
 router.get(//TODO
   '/course-summaries/:courseId'
   ,isAuth
   , summaryController.getCourseSummaries);
-// PUT /summaries/rank-up
+// PUT /summaries/rank-up/:summaryId
 router.get(//TODO
   '/rank-up/:summaryId'
   ,isAuth

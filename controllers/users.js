@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const webToken = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
+const CourseAppearance = require('../models/courseAppearance'); 
 const User = require('../models/user');
 const ExamDirectory = require('../models/examDirectory');
 
@@ -43,11 +44,11 @@ exports.createUser = async(req, res, next) => {
   console.log(req.body);
   console.log(req.file.path);
 
-
+  
   const imageUrl=req.file.path;
   const email = req.body.email;
   const name = req.body.name;
-  const password = req.body.password;
+  const password = await bcrypt.hash(req.body.password,12);
   const user = new User({
     email: email,
     name: name,
@@ -55,7 +56,6 @@ exports.createUser = async(req, res, next) => {
     password:password
   });
   try{
-    //const hashedPw = await bcrypt.hash(password,12);
     const result = await user.save();
     res.status(201).json({user: result});
 
@@ -68,22 +68,22 @@ exports.createUser = async(req, res, next) => {
 exports.loginUser =async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  console.log(password);
+  
   let loadedUser;
   try{
   const user = await User.findOne({email:email});
   if (!user) {
     const error = new Error('Could not find user.');
     error.statusCode = 401;
-    next(error);
+    throw error;
   }
   loadedUser = user;
 
-  const isEqual = password===user.password;//await bcrypt.compare(password,user.password);  
+  const isEqual = await bcrypt.compare(password,user.password);  
   if(!isEqual){
     const error = new Error('Incorrect password.');
     error.statusCode = 401;
-    next(error);
+    throw error;
   }
   const token = webToken.sign({
       email:loadedUser.email,
@@ -135,22 +135,45 @@ const clearImage = filePath => {
 };
 
 exports.getVailidExam = async (req, res, next) => {
-  //const userId = req.userId;
+  const userId = req.userId;
+    //const minutsBeforExam = JSON.parse().NUM-OF-MAXIMUM-MINUTS-BEFOR-EXAM-TO-LOGIN;
+
+  const currentDate = new Date();
+  const upperConnetionDateLimit = addMinutes(currentDate,30);
   console.log('examDirectory');
   try{
-   const directories = await ExamDirectory.find()//.lte(Date.now())
-   .populate('courseId'
-   , null, 
-   { examsDateA: { $gte:new Date('2020-12-23T22:00:00.000Z') }}, { limit: 5 });
-    directories.forEach(directory=>{
-      if(!directory.courseId)
-          directories.unshift(directory);
-    })
-   console.log(directories);
-   //console.log(directory);
-      res.status(200).json({directory:directories});
+   const course = await CourseAppearance.findOne({
+    $and: [
+      {currentDate: {$gte:examsDateA} },
+        {userId:{$in: [students]} }
+      ]
+      });
+      if(!course)
+        throw new Error("There is not valid course");
+      const directory = await ExamDirectory.findOne({owner:userId,courseId:course._id})
+      .populate("summaries");
+      if(!directory)
+        throw new Error("There is not directory for this student in this course");
+        
+     res.status(200).json({directory:directory,course:course});
+  }catch(err){
+    next(err);
+  }
+}
+exports.followCourse = async (req, res, next) => {
+  const userId = req.userId;
+  const courseId = req.params.courseId;
+  try{
+    let user = await User.findById(userId);
+    if(user.followedCourses.indexOf(courseId)===-1)
+      user.followedCourses.push(courseId);
+    user = await user.save();
+    res.status(201).json({user:user});
   }catch(err){
     next(err);
   }
 }
 
+function addMinutes(date, minutes) {
+  return new Date(date.getTime() + minutes*60000);
+}

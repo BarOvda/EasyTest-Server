@@ -28,7 +28,10 @@ const userSchema = new Schema({
    type:Schema.Types.ObjectId,
    ref:'ExamDirectory'
  }]
-
+, followedCourses:[{
+  type:Schema.Types.ObjectId,
+   ref:'Course'
+ }]
 });
 
 // userSchema.methods.uploadsummary = function(summary) {

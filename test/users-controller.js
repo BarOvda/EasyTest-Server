@@ -12,7 +12,9 @@ const UsersController = require('../controllers/users');
 
 describe('Users Controller', function() {
   before(async function(done) {
- 
+    mongoose.connect("mongodb+srv://my_user1:1234@cluster0.9h1vb.mongodb.net/easy_test?retryWrites=true&w=majority",{ useNewUrlParser: true 
+, useUnifiedTopology: true});
+
     const user = new User({
         email: 'test@test.com',
         password: 'tester',

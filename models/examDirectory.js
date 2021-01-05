@@ -28,16 +28,5 @@ const examDirectorySchema = new Schema({
   }
   
 });
-// examDirectorySchema.statics.findByCourseDateBetween =  function (start,callback) {
-//     var query = this.find()
-
-//     courseAppearance.find({'name':'my-appareance-test'}, function (error, course) {
-//       query.where(
-//         {courseId:  mongoose.Types.ObjectId(course._id)}
-//       ).exec(callback);
-//     })
-//     return query
-
-// }
 
 module.exports = mongoose.model('ExamDirectory', examDirectorySchema);

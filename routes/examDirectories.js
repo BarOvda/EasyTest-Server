@@ -12,6 +12,7 @@ const router = express.Router();
 router.get('/:directoryId',isAuth, examDirectoriesController.getDirectory);//TESTED
 // PUT /exam-directories/upload/:courseId ,HEADER Authentication : token
 router.put('/upload/:courseId',isAuth,examDirectoriesController.createDirectory);//TESTED
-// PUT  {directoryId}/{summaryId}
+// PUT  /exam-directories/upload-summary/{directoryId}/{summaryId}
 router.put('/upload-summary/:directoryId/:summaryId',isAuth, examDirectoriesController.addFileToDirectory);//TESTED
+
 module.exports = router;

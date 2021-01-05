@@ -19,4 +19,10 @@ router.put(
         //.isDate().withMessage("The date is not valid")
     ],
     coursesAppController.uploadCourseAppearance);
+    //PUT /course-appearances/add-student/:courseAppId/:userId
+router.put(
+    '/add-student/:courseAppId/:userId',//TESTED ,TODO - add lecturer permissions
+    
+    coursesAppController.addStudent);
+    
     module.exports = router;

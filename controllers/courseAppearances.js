@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 
 const CourseAppearance = require('../models/courseAppearance');
 const Course = require('../models/course');
+const User = require('../models/user');
+
 
 exports.uploadCourseAppearance =async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseId);
@@ -48,4 +50,28 @@ exports.uploadCourseAppearance =async (req, res, next) => {
     }catch(err){
       next(err);
     } 
-}
+};
+exports.addStudent =async (req, res, next) => {
+  const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
+  const userId = mongoose.Types.ObjectId(req.params.userId);
+  try{
+  const course =await CourseAppearance.findById(courseId);
+  const user =await User.findById(userId);
+  console.log(courseId);
+  console.log(userId);
+  if(!course||!user)
+    throw new Error("invalid course or student");
+  console.log("sdas");
+
+  if(course.students.indexOf(userId)===-1)
+    course.students.push(userId);
+  course.save();
+
+  console.log(res);
+
+  res.status(200).json("The student Added succesfuly.");
+  }catch(err){
+    console.log(err);
+    next(err);
+  }
+};

@@ -24,7 +24,7 @@ router.get('/all-users', usersController.getUsers); //TESTED
 // GET /users/directories
 //router.get('/directories/:userId', usersController.getUserDirectories);//TODO
 // PUT /users/sign-up
-router.put( //TESTED Need an update with hash password logic
+router.put( //TESTED 
   '/sign-up',
   upload.single('image'),
   [
@@ -48,7 +48,7 @@ router.put( //TESTED Need an update with hash password logic
   usersController.createUser
 );
 // GET /users/login
-router.get('/login', //TESTED - Need an update with hash password logic
+router.get('/login', //TESTED 
   [
     body('email')
     .isEmail().withMessage('Please enter a valid email'),
@@ -73,9 +73,14 @@ router.put(//TESTED
   usersController.updateUser
 );
 // GET /users/exam
-router.get('/exam', //TESTED - Need an update with hash password logic
+router.get('/exam', //TODO
   //isAuth,
   usersController.getVailidExam);
+  router.put(
+    '/follow-course/:courseId',
+    isAuth,
+    usersController.followCourse
+  );
 
 
 module.exports = router;

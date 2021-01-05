@@ -23,6 +23,11 @@ const courseAppearanceSchema = new Schema({
     type: Schema.Types.ObjectId, 
     ref: 'User' 
 }]
+//,
+// directories:[{
+//    type: Schema.Types.ObjectId, 
+//    ref: 'ExamDirectory' 
+// }]
 });
 
 module.exports = mongoose.model('CourseAppearance', courseAppearanceSchema);
