@@ -7,6 +7,7 @@ const summarySchema = new Schema({
   title: {
     type: String,
     required: true
+    
   },
   uploadDate: {
     type: String,
@@ -38,5 +39,6 @@ const summarySchema = new Schema({
      default:0
   }
 });
-
+//add index for search titles
+summarySchema.index({ title: 'text'});
 module.exports = mongoose.model('Summary', summarySchema);

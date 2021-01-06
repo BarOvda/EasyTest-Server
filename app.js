@@ -8,7 +8,7 @@ const coursesRoutes = require('./routes/courses');
 const courseAppRoutes = require('./routes/courseAppearances');
 const examDirectoriesRoutes = require('./routes/examDirectories');
 const summariesRoutes = require('./routes/summaries');
-
+const feedRoutes = require('./routes/feed');
 const app = express();
 
 
@@ -29,7 +29,7 @@ app.use('/courses', coursesRoutes);
 app.use('/course-appearances', courseAppRoutes);
 app.use('/exam-directories', examDirectoriesRoutes);
 app.use('/summaries', summariesRoutes);
-
+app.use('/feed', feedRoutes);
 
 app.use((req, res, next) => {res.status(404).json({ message: 'Page not found' });});
 app.use((error, req, res, next) => {

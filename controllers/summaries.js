@@ -22,12 +22,9 @@ exports.getAllSummaries = async (req, res, next) => {
 };
 exports.uploadSummary = async (req, res, next) => {
 
-
-    
   const pathUrl=req.file.path;
   const title = req.body.title;
   const owner = mongoose.Types.ObjectId(req.userId);
-
   const summary = new Summary({
     title: title,
     owner: owner,
