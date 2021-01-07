@@ -59,12 +59,6 @@ exports.getUserUploads = async (req, res, next) => {
   }
 }
 
-exports.getCourseSummaries = async (req, res, next) => {
-  //const userId = req.userId;
-  const courseId = req.params.courseId;
-
-
-}
 exports.rankUp = async (req, res, next) => {
   const userId = req.userId;
   const rank = req.body.rank;
