@@ -5,7 +5,7 @@ const webToken = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const dateUtils = require('../utils/dates'); 
 const CourseAppearance = require('../models/courseAppearance'); 
-
+const examConstants =  require('../constants/exam-constants.json'); 
 const User = require('../models/user');
 const ExamDirectory = require('../models/examDirectory');
 
@@ -141,8 +141,8 @@ exports.getVailidExam = async (req, res, next) => {
 
   const currentDate = new Date();
   //console.log(currentDate);
-  const upperDateLimit = dateUtils.addMinutes(currentDate,60);
-  const lowerDateLimit = dateUtils.addMinutes(currentDate,-30);
+  const upperDateLimit = dateUtils.addMinutes(currentDate,examConstants['NUM-OF-MAXIMUM-MINUTS-AFTER-EXAM-TO-LOGIN']);
+  const lowerDateLimit = dateUtils.addMinutes(currentDate,examConstants['NUM-OF-MAXIMUM-MINUTS-BEFOR-EXAM-TO-LOGIN']);
   //console.log(upperDateLimit);
 
   try{
