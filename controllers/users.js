@@ -3,8 +3,9 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const webToken = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-
+const dateUtils = require('../utils/dates'); 
 const CourseAppearance = require('../models/courseAppearance'); 
+
 const User = require('../models/user');
 const ExamDirectory = require('../models/examDirectory');
 
@@ -35,7 +36,6 @@ exports.createUser = async(req, res, next) => {
     error.data=errors.array();
     next(error);
   }
-  //what req.file means?
   if (!req.file) {
     const error = new Error('No image provided.');
     error.statusCode = 422;
@@ -136,20 +136,34 @@ const clearImage = filePath => {
 
 exports.getVailidExam = async (req, res, next) => {
   const userId = req.userId;
-    //const minutsBeforExam = JSON.parse().NUM-OF-MAXIMUM-MINUTS-BEFOR-EXAM-TO-LOGIN;
+  console.log(userId);
+  
 
   const currentDate = new Date();
-  const upperConnetionDateLimit = addMinutes(currentDate,30);
-  console.log('examDirectory');
+  //console.log(currentDate);
+  const upperDateLimit = dateUtils.addMinutes(currentDate,60);
+  const lowerDateLimit = dateUtils.addMinutes(currentDate,-30);
+  //console.log(upperDateLimit);
+
   try{
    const course = await CourseAppearance.findOne({
+   $or:[{
     $and: [
-      {currentDate: {$gte:examsDateA} },
-        {userId:{$in: [students]} }
+      {examsDateA:{$lte:upperDateLimit} },
+      {examsDateA:{$gte:lowerDateLimit} },
+        {students:userId}
       ]
+    },{$and: [
+        {examsDateB:{$lte:upperDateLimit} },
+        {examsDateB:{$gte:lowerDateLimit} },
+          {students:userId}
+    ]}]
       });
+      console.log(course);
       if(!course)
         throw new Error("There is not valid course");
+      console.log(course);
+
       const directory = await ExamDirectory.findOne({owner:userId,courseId:course._id})
       .populate("summaries");
       if(!directory)
@@ -174,6 +188,3 @@ exports.followCourse = async (req, res, next) => {
   }
 }
 
-function addMinutes(date, minutes) {
-  return new Date(date.getTime() + minutes*60000);
-}

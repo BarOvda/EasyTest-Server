@@ -11,7 +11,7 @@ const summariesRoutes = require('./routes/summaries');
 const feedRoutes = require('./routes/feed');
 const app = express();
 
-
+console.log(Date.now().toString());
 app.use(bodyParser.json()); 
 //app.use( multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 app.use(express.static('public'));//, express.static(path.join(__dirname, 'images')

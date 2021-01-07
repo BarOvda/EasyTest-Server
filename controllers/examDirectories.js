@@ -1,8 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-const bcrypt = require('bcryptjs');
-const webToken = require('jsonwebtoken');
-const { validationResult } = require('express-validator');
+
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const ExamDirectory = require('../models/examDirectory');

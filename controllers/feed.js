@@ -1,12 +1,4 @@
-const fs = require('fs');
-const path = require('path');
-const bcrypt = require('bcryptjs');
-const webToken = require('jsonwebtoken');
-const { validationResult } = require('express-validator');
 
-const CourseAppearance = require('../models/courseAppearance'); 
-const User = require('../models/user');
-const ExamDirectory = require('../models/examDirectory');
 const Summary = require('../models/summary');
 
 exports.getFeed = async (req, res, next) => {
@@ -26,7 +18,6 @@ exports.searchSummaryByKeyWord = async (req, res, next) => {
 };
 exports.searchSummaryByCourse = async (req, res, next) => {
     const courseId = req.params.courseId;
-    console.log("here");
 
     try{
         const searchResult = await Summary.find({course:courseId});
@@ -41,7 +32,6 @@ exports.searchSummaryByCourse = async (req, res, next) => {
 exports.searchSummaryByCourseAndKeyWord = async (req, res, next) => {
     const courseId = req.params.courseId;
     const keyWord = req.body.keyWord;
-    console.log("here");
     try{
         const searchResult = await Summary.find({course:courseId
         ,$text:{$search:keyWord}});
@@ -51,7 +41,6 @@ exports.searchSummaryByCourseAndKeyWord = async (req, res, next) => {
     }catch(err){    
         next(err);
     }
-
 }
 
 

@@ -4,7 +4,6 @@ const isAuth = require('../auth/is-auth');
 const usersController = require('../controllers/users');
 const User = require('../models/user');
 const router = express.Router();
-const fileHandler = require('../helpers/filesHandler');
 const multer = require('multer');
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -73,9 +72,10 @@ router.put(//TESTED
   usersController.updateUser
 );
 // GET /users/exam
-router.get('/exam', //TODO
-  //isAuth,
+router.get('/exam', //TESTED
+  isAuth,
   usersController.getVailidExam);
+  //
   router.put(
     '/follow-course/:courseId',
     isAuth,
