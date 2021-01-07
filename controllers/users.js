@@ -8,7 +8,7 @@ const CourseAppearance = require('../models/courseAppearance');
 const examConstants =  require('../constants/exam-constants.json'); 
 const User = require('../models/user');
 const ExamDirectory = require('../models/examDirectory');
-
+const userConstants = require('../constants/users.json');
 
 exports.getUsers = async (req, res, next) => {
   const currentPage = req.query.page || 0;
@@ -36,16 +36,12 @@ exports.createUser = async(req, res, next) => {
     error.data=errors.array();
     next(error);
   }
+  let imageUrl;
   if (!req.file) {
-    const error = new Error('No image provided.');
-    error.statusCode = 422;
-    next(error);
-  }
-  console.log(req.body);
-  console.log(req.file.path);
-
-  
-  const imageUrl=req.file.path;
+    imageUrl = userConstants["PATH"];
+  }else{
+    imageUrl=req.file.path;
+  }  
   const email = req.body.email;
   const name = req.body.name;
   const password = await bcrypt.hash(req.body.password,12);
@@ -89,7 +85,8 @@ exports.loginUser =async (req, res, next) => {
       email:loadedUser.email,
       userId:loadedUser._id.toString()
     }
-    ,'somesupersecret',//known only by the server
+    ,userConstants.HASH_KEY_CODE
+    ,
     {expiresIn:'4h'}
     );
     res.status(200).json({token:token, userId:loadedUser._id.toString()});
