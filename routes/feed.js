@@ -6,7 +6,10 @@ const isAuth = require('../auth/is-auth');
 const feedController = require('../controllers/feed');
 const router = express.Router();
 
-
+//GET /feed
+router.get('/'// TODO - TESTS
+    ,isAuth
+    , feedController.getFeed); 
 // GET /feed/search
 router.get('/search'// TESTED
     ,isAuth

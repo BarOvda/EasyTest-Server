@@ -15,14 +15,12 @@ exports.uploadCourse =async (req, res, next) => {
     const course = new Course({
         name: name
       });
-      try{
-
-      
-    const result = await course.save();
-    res.status(201).json({course: result });
-      }catch(err){
+    try{
+      const result = await course.save();
+      res.status(201).json({course: result });
+    }catch(err){
         return next(err);
-      }
+     }
 };
     
         
