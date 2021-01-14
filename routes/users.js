@@ -47,7 +47,7 @@ router.put( //TESTED
   usersController.createUser
 );
 // GET /users/login
-router.get('/login', //TESTED 
+router.post('/login', //TESTED 
   [
     body('email')
     .isEmail().withMessage('Please enter a valid email'),
@@ -75,8 +75,8 @@ router.put(//TESTED
 router.get('/exam', //TESTED
   isAuth,
   usersController.getVailidExam);
-  //
-  router.put(
+  /// PUT users/follow-course/:courseId
+  router.put( //TESTED
     '/follow-course/:courseId',
     isAuth,
     usersController.followCourse

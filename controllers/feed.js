@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const Summary = require('../models/summary');
-const { use } = require('../routes/feed');
 const feedConstants = require('../constants/feed.json');
 exports.getFeed = async (req, res, next) => {
     const userId = req.userId;
@@ -10,7 +9,7 @@ exports.getFeed = async (req, res, next) => {
         const user = await (await User.findById(userId)).populated("followedCourses");
         const courses = user.followedCourses;
         let feed = [];
-        courses.forEach(course=>{
+        courses.forEach(async course=>{
             const summaries = await Summary.find({course:course._id})
             .sort('-rank')
             .skip(currentPage * perPage)

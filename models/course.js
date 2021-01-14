@@ -12,5 +12,6 @@ const courseSchema = new Schema({
     ref: 'CourseAppearance' 
  }]
 });
+courseSchema.index({ name: 'text'});
 
 module.exports = mongoose.model('Course', courseSchema);

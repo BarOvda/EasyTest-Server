@@ -64,7 +64,7 @@ exports.createUser = async(req, res, next) => {
 exports.loginUser =async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  
+  console.log(email);
   let loadedUser;
   try{
   const user = await User.findOne({email:email});
@@ -89,7 +89,7 @@ exports.loginUser =async (req, res, next) => {
     ,
     {expiresIn:'4h'}
     );
-    res.status(200).json({token:token, userId:loadedUser._id.toString()});
+    res.status(200).json({token:token,user:user, userId:loadedUser._id.toString()});
   }catch(err){
     next(err);
   }

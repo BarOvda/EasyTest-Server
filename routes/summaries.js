@@ -22,7 +22,6 @@ router.put(//TESTED
   '/upload'
   ,isAuth
   ,upload.single('file')
-  ,[ body('title')]
   ,summaryController.uploadSummary
 );
 // GET /summaries/my-uploads
@@ -31,9 +30,15 @@ router.get(//TESTED
 ,isAuth
 , summaryController.getUserUploads);
 
-
+// GET /summaries/users-rank/:summaryId
+router.get(//TODO - TESTS
+  '/users-rank/:summaryId'
+  ,isAuth
+  , summaryController.getUsersRank);
+  
+  
 // PUT /summaries/rank-up/:summaryId
-router.get(//TODO
+router.put(//TESTED!
   '/rank-up/:summaryId'
   ,isAuth
   ,[ body('rank')]

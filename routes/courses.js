@@ -4,6 +4,10 @@ const coursesController = require('../controllers/courses');
 const Course = require('../models/course');
 const router = express.Router();
 
+
+
+// GET /courses/all-courses
+router.get('/all-courses', coursesController.getCourses); //TESTED
 //PUT /courses/upload
 router.put(//TESTED
     '/upload',
@@ -20,4 +24,10 @@ router.put(//TESTED
         })  
     ],
     coursesController.uploadCourse);
-    module.exports = router;
+    // POST courses/search/key-word
+router.post(
+      '/search/key-word'
+     // ,isAuth
+    ,[ body('keyWord')]
+      ,coursesController.searchByKeyWord);
+module.exports = router;

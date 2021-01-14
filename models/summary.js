@@ -26,19 +26,22 @@ const summarySchema = new Schema({
      ref: 'Course'
   }
   ,
-  rankedByUsers:[{
+  usersRank:[{
+   user:{
     type: Schema.Types.ObjectId, 
-     ref: 'Users',
-    default:[],
+    ref: 'Users',
+    required:false
+   } ,
+    rank:{
+      type: Number, 
      required:false
-  }]
-  ,
+    }
+  }],
   rank:{
     type: Number, 
      required:false,
      default:0
   }
 });
-//add index for search titles
 summarySchema.index({ title: 'text'});
 module.exports = mongoose.model('Summary', summarySchema);

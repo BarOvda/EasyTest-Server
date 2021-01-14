@@ -11,10 +11,8 @@ const summariesRoutes = require('./routes/summaries');
 const feedRoutes = require('./routes/feed');
 const app = express();
 
-console.log(Date.now().toString());
 app.use(bodyParser.json()); 
-//app.use( multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
-app.use(express.static('public'));//, express.static(path.join(__dirname, 'images')
+app.use(express.static('public'));
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -40,11 +38,11 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message,data:data });
 });
 
-mongoose.connect("mongodb+srv://my_user1:1234@cluster0.9h1vb.mongodb.net/easy_test?retryWrites=true&w=majority",{ useNewUrlParser: true 
-, useUnifiedTopology: true})
+mongoose.connect("mongodb+srv://my_user1:1234@cluster0.9h1vb.mongodb.net/easy_test?retryWrites=true&w=majority"
+,{ useNewUrlParser: true 
+, useUnifiedTopology: true,
+useCreateIndex:true})
   .then(result => {
-    app.listen(8080);
+    app.listen(8081);
   })
   .catch(err => console.log(err));
-
-
