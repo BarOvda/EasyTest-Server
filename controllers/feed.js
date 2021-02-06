@@ -1,22 +1,51 @@
 const User = require('../models/user');
 const Summary = require('../models/summary');
 const feedConstants = require('../constants/feed.json');
+const courseAppearance = require('../models/courseAppearance');
+const mongoose = require('mongoose');
+
 exports.getFeed = async (req, res, next) => {
     const userId = req.userId;
+    console.log(userId);
     const currentPage = req.query.page || 0;
     const perPage = feedConstants.NUM_OF_SUMMARIES_PER_PAGE;
     try{
-        const user = await (await User.findById(userId)).populated("followedCourses");
+        const user =  await User.findById(userId).populate("followedCourses");
+
+       // console.log(user);
         const courses = user.followedCourses;
-        let feed = [];
-        courses.forEach(async course=>{
-            const summaries = await Summary.find({course:course._id})
-            .sort('-rank')
-            .skip(currentPage * perPage)
-            .limit(perPage);
-            feed.push(...summaries);
+        let appearancesIds = [];
+        courses.forEach(course=>{
+            course.appearances.forEach(app=>{
+                if(mongoose.Types.ObjectId.isValid(app._id))
+                {let convertedId =  mongoose.Types.ObjectId(app._id);
+                appearancesIds.push(convertedId) ;   }
+            });
+            //appearancesIds.push.apply(appearancesIds,  mongoose.Types.ObjectId([...course.appearances]));
         });
-        res.status(200).json({feed:feed});
+
+         console.log(appearancesIds);
+       // const coursesApp = await courseAppearance.find({_id: appearancesIds} );
+       // console.log(coursesApp);
+
+       var i;
+       let feed=[];
+        for (i = 0; i < appearancesIds.length; i++) {
+        
+        let sum = await Summary.find({courseAppearance:appearancesIds});
+        feed.push(...sum);   
+        }
+    //    feeda = appearancesIds.reduce(async function(feed,courseApp) {
+    //        let sum = await Summary.find({courseAppearance:appearancesIds});
+    //         // .sort('-rank')
+    //         // .skip(currentPage * perPage)
+    //         // .limit(perPage);
+    //       // console.log(feed);
+    //        // feed.push.apply(feed,summaries)
+    //         feed.push(...sum);
+    //     });
+        console.log(feed);
+        res.status(200).json({data:feed});
     }catch(err){
         next(err);
     } 
