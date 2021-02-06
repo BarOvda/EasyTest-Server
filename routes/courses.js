@@ -1,5 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
+const isAuth = require('../auth/is-auth');
 const coursesController = require('../controllers/courses');
 const Course = require('../models/course');
 const router = express.Router();
@@ -7,7 +8,13 @@ const router = express.Router();
 
 
 // GET /courses/all-courses
-router.get('/all-courses', coursesController.getCourses); //TESTED
+router.get('/all-courses'
+  ,isAuth
+, coursesController.getUnfollowedCourses); //TESTED
+
+router.get('/followed-courses'
+  ,isAuth
+, coursesController.getFollowedCourses); //TESTED
 //PUT /courses/upload
 router.put(//TESTED
     '/upload',

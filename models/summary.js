@@ -21,9 +21,9 @@ const summarySchema = new Schema({
      type: Schema.Types.ObjectId, 
      ref: 'User' 
   },
-  course:{
+  courseAppearance:{
     type: Schema.Types.ObjectId, 
-     ref: 'Course'
+     ref: 'CourseAppearance'
   }
   ,
   usersRank:[{

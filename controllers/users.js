@@ -5,6 +5,7 @@ const webToken = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const dateUtils = require('../utils/dates'); 
 const CourseAppearance = require('../models/courseAppearance'); 
+const Course = require('../models/course'); 
 const examConstants =  require('../constants/exam-constants.json'); 
 const User = require('../models/user');
 const ExamDirectory = require('../models/examDirectory');
@@ -86,8 +87,7 @@ exports.loginUser =async (req, res, next) => {
       userId:loadedUser._id.toString()
     }
     ,userConstants.HASH_KEY_CODE
-    ,
-    {expiresIn:'4h'}
+    //,{expiresIn:'6h'}
     );
     res.status(200).json({token:token,user:user, userId:loadedUser._id.toString()});
   }catch(err){
@@ -172,16 +172,44 @@ exports.getVailidExam = async (req, res, next) => {
   }
 }
 exports.followCourse = async (req, res, next) => {
+  console.log('request added');
   const userId = req.userId;
   const courseId = req.params.courseId;
   try{
     let user = await User.findById(userId);
-    if(user.followedCourses.indexOf(courseId)===-1)
+    let course = await Course.findById(courseId);
+    if(user.followedCourses.indexOf(courseId)===-1){
       user.followedCourses.push(courseId);
+      course.followers.push(userId);
+    }
     user = await user.save();
+    course = await course.save();
     res.status(201).json({user:user});
   }catch(err){
     next(err);
   }
 }
 
+exports.unFollowCourse = async (req, res, next) => {
+  
+  const userId = req.userId;
+  const courseId = req.params.courseId;
+  try{
+    let user = await User.findById(userId);
+    let course = await Course.findById(courseId);
+    if(user.followedCourses.indexOf(courseId)!=-1){
+      const  courseIndex= user.followedCourses.indexOf(courseId, 0);
+      const userIndex = course.followers.indexOf(userId, 0);
+      console.log(courseIndex);
+
+      user.followedCourses.splice(courseIndex,1);
+      course.followers.splice(userIndex,1);
+    }
+    console.log(user.followCourse);
+    user = await user.save();
+    course = await course.save();
+    res.status(201).json({user:user});
+  }catch(err){
+    next(err);
+  }
+}

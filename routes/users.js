@@ -25,7 +25,7 @@ router.get('/all-users', usersController.getUsers); //TESTED
 // PUT /users/sign-up
 router.put( //TESTED 
   '/sign-up',
-  upload.single('image'),
+  upload.single('image'), 
   [
     body('email')
     .isEmail().withMessage('Please enter a valid email')
@@ -82,5 +82,9 @@ router.get('/exam', //TESTED
     usersController.followCourse
   );
 
-
+  router.put( //TESTED
+    '/unfollow-course/:courseId',
+    isAuth,
+    usersController.unFollowCourse
+  );
 module.exports = router;

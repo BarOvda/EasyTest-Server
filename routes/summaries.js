@@ -19,7 +19,7 @@ const router = express.Router();
 router.get('/all-summaries', summaryController.getAllSummaries);//TESTED
 // PUT /summaries/upload
 router.put(//TESTED
-  '/upload'
+  '/upload:courseAppId'
   ,isAuth
   ,upload.single('file')
   ,summaryController.uploadSummary

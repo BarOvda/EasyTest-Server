@@ -22,17 +22,40 @@ exports.uploadCourse =async (req, res, next) => {
         return next(err);
      }
 };
-exports.getCourses =async (req, res, next) => {
-  const currentPage = req.query.page || 0;
-  const perPage = feedConstants.NUM_OF_COURSES_FOLLOW_UP_PER_PAGE;
+exports.getUnfollowedCourses =async (req, res, next) => {
+  const userId = req.userId;
+  const currentPage = (+req.query.page || 1) - 1;
+  const perPage = +req.query.per_page;
+  console.log(userId);
   try{
-    const totalCount = await Course.find().countDocuments();
-    const courses = await Course.find()
+    const totalCount = await Course.find({"followers": { "$ne":userId }}).countDocuments();
+    
+    const courses = await Course.find({"followers": { "$ne":userId }})
           .skip(currentPage * perPage)
           .limit(perPage);
       res
     .status(200)
-    .json({courses: courses,totalItems:totalCount});
+    
+    .json({courses: courses,items_per_page:perPage,current_page:currentPage+1,total_items:totalCount});
+  }catch (err){
+    next(err);
+  }
+};
+exports.getFollowedCourses =async (req, res, next) => {
+  const userId = req.userId;
+  const currentPage = (+req.query.page || 1) - 1;
+  const perPage = +req.query.per_page;
+  console.log(userId);
+  try{
+    const totalCount = await Course.find({"followers": { "$in":userId }}).countDocuments();
+    
+    const courses = await Course.find({"followers": { "$in":userId }})
+          .skip(currentPage * perPage)
+          .limit(perPage);
+      res
+    .status(200)
+    
+    .json({courses: courses,items_per_page:perPage,current_page:currentPage+1,total_items:totalCount});
   }catch (err){
     next(err);
   }

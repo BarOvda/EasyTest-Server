@@ -22,6 +22,8 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
+
+
 app.use('/users', usersRoutes);
 app.use('/courses', coursesRoutes);
 app.use('/course-appearances', courseAppRoutes);
@@ -43,6 +45,6 @@ mongoose.connect("mongodb+srv://my_user1:1234@cluster0.9h1vb.mongodb.net/easy_te
 , useUnifiedTopology: true,
 useCreateIndex:true})
   .then(result => {
-    app.listen(8081);
+    app.listen(8082);
   })
   .catch(err => console.log(err));

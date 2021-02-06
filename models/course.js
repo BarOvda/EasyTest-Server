@@ -10,6 +10,10 @@ const courseSchema = new Schema({
   appearances:[{
     type: Schema.Types.ObjectId, 
     ref: 'CourseAppearance' 
+ }],
+ followers:[{
+  type: Schema.Types.ObjectId, 
+  ref: 'Users' 
  }]
 });
 courseSchema.index({ name: 'text'});
