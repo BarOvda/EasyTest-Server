@@ -23,21 +23,26 @@ exports.uploadCourse =async (req, res, next) => {
      }
 };
 exports.getUnfollowedCourses =async (req, res, next) => {
+  console.log("here");
+
   const userId = req.userId;
+
   const currentPage = (+req.query.page || 1) - 1;
   const perPage = +req.query.per_page;
-  console.log(userId);
   try{
     const totalCount = await Course.find({"followers": { "$ne":userId }}).countDocuments();
     
     const courses = await Course.find({"followers": { "$ne":userId }})
           .skip(currentPage * perPage)
           .limit(perPage);
+          console.log(courses);
+
       res
     .status(200)
     
     .json({courses: courses,items_per_page:perPage,current_page:currentPage+1,total_items:totalCount});
   }catch (err){
+
     next(err);
   }
 };
@@ -60,6 +65,16 @@ exports.getFollowedCourses =async (req, res, next) => {
     next(err);
   }
 };
+exports.getAllCourses =async (req, res, next) => {
+  const userId = req.userId;
+  
+  try{
+    const courses = await Course.find()
+    res.status(200).json({courses: courses});
+  }catch (err){
+    next(err);
+  }
+};
 exports.searchByKeyWord =async (req, res, next) => {
   const keyWord = req.body.keyWord;
   try{
@@ -71,3 +86,14 @@ exports.searchByKeyWord =async (req, res, next) => {
       next(err);
   }
 };
+exports.getAllCourseAppearances =async (req, res, next) => {
+  const courseId = req.params.courseId;
+  try{
+    const course = await Course.findById(courseId).populate('appearances');
+    const appearances = course.appearances;
+    res.status(200).json({appearances: appearances});
+  }catch (err){
+    next(err);
+  }
+};
+

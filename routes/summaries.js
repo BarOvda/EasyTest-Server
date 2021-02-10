@@ -17,7 +17,7 @@ const router = express.Router();
 
 // GET /summaries/all-summaries
 router.get('/all-summaries', summaryController.getAllSummaries);//TESTED
-// PUT /summaries/upload
+// PUT /summaries/upload/{courseAppId}
 router.put(//TESTED
   '/upload:courseAppId'
   ,isAuth

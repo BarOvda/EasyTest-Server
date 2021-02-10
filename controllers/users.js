@@ -30,7 +30,11 @@ exports.getUsers = async (req, res, next) => {
 };
 
 exports.createUser = async(req, res, next) => {
+  console.log(req.file);
+ // console.log(req);
+
   const errors = validationResult(req);
+  
   if (!errors.isEmpty()) {
     const error = new Error('Validation failed.');
     error.statusCode = 422;
@@ -38,6 +42,7 @@ exports.createUser = async(req, res, next) => {
     next(error);
   }
   let imageUrl;
+  
   if (!req.file) {
     imageUrl = userConstants["PATH"];
   }else{
@@ -52,6 +57,7 @@ exports.createUser = async(req, res, next) => {
     imageUrl: imageUrl,
     password:password
   });
+  console.log(user);
   try{
     const result = await user.save();
     res.status(201).json({user: result});

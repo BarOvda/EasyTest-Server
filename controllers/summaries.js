@@ -17,6 +17,7 @@ exports.uploadSummary = async (req, res, next) => {
 
   const pathUrl=req.file.path;
   const title = req.file.originalname;
+  console.log(req.file);
   const owner = mongoose.Types.ObjectId(req.userId);
   const courseAppId = req.params.courseAppId;
   const summary = new Summary({

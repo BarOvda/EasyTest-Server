@@ -6,9 +6,16 @@ const Course = require('../models/course');
 const router = express.Router();
 
 
+// GET /courses/all
+router.get('/all'
+  ,isAuth
+, coursesController.getAllCourses); //TESTED
 
-// GET /courses/all-courses
-router.get('/all-courses'
+// GET /courses/all-appearances
+router.get('/all-appearances/:courseId'
+, coursesController.getAllCourseAppearances); //TESTED
+// GET /courses/allcourses
+router.get('/allcourses'
   ,isAuth
 , coursesController.getUnfollowedCourses); //TESTED
 

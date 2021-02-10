@@ -11,9 +11,10 @@ exports.getFeed = async (req, res, next) => {
     const perPage = feedConstants.NUM_OF_SUMMARIES_PER_PAGE;
     try{
         const user =  await User.findById(userId).populate("followedCourses");
-
-       // console.log(user);
         const courses = user.followedCourses;
+        if(!courses){
+            res.status(200).json({data:[]});
+        }
         let appearancesIds = [];
         courses.forEach(course=>{
             course.appearances.forEach(app=>{
@@ -21,29 +22,15 @@ exports.getFeed = async (req, res, next) => {
                 {let convertedId =  mongoose.Types.ObjectId(app._id);
                 appearancesIds.push(convertedId) ;   }
             });
-            //appearancesIds.push.apply(appearancesIds,  mongoose.Types.ObjectId([...course.appearances]));
         });
 
          console.log(appearancesIds);
-       // const coursesApp = await courseAppearance.find({_id: appearancesIds} );
-       // console.log(coursesApp);
-
        var i;
        let feed=[];
         for (i = 0; i < appearancesIds.length; i++) {
-        
         let sum = await Summary.find({courseAppearance:appearancesIds});
-        feed.push(...sum);   
+        feed.push.apply(feed,sum);   
         }
-    //    feeda = appearancesIds.reduce(async function(feed,courseApp) {
-    //        let sum = await Summary.find({courseAppearance:appearancesIds});
-    //         // .sort('-rank')
-    //         // .skip(currentPage * perPage)
-    //         // .limit(perPage);
-    //       // console.log(feed);
-    //        // feed.push.apply(feed,summaries)
-    //         feed.push(...sum);
-    //     });
         console.log(feed);
         res.status(200).json({data:feed});
     }catch(err){
