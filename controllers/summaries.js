@@ -80,9 +80,9 @@ exports.getUsersRank = async (req, res, next) => {
   const perPage = feedConstants.NUM_OF_RANKS_OF_SUMMARY_PER_PAGE;
   const currentPage = req.query.page || 0;
   try{
-    const summary = await (await Summary.findById(summaryId))
+    const summary =  await Summary.findById(summaryId)
     .lean()
-    .populated({
+    .populate({
       path:usersRank,
       options: {
         limit: perPage,

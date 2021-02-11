@@ -35,11 +35,12 @@ router.get(//TODO - TESTS
   '/users-rank/:summaryId'
   ,isAuth
   , summaryController.getUsersRank);
+
+
   
-  
-// PUT /summaries/rank-up/:summaryId
+// PUT /summaries/rank/:summaryId
 router.put(//TESTED!
-  '/rank-up/:summaryId'
+  '/rank/:summaryId'
   ,isAuth
   ,[ body('rank')]
   , summaryController.rankUp);
