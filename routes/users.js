@@ -6,15 +6,15 @@ const User = require('../models/user');
 const router = express.Router();
 const multer = require('multer');
 const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/images');
-  },
+  // destination: (req, file, cb) => {
+  //   cb(null, 'public/images');
+  // },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname.replace(/ /g, '_'));//replace all ' ' with '_'
   }
 });
 
-var upload = multer({ storage: fileStorage });
+var upload = multer({storage:fileStorage});
 
 
 

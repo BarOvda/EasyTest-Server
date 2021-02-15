@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const Summary = require('../models/summary');
 const feedConstants = require('../constants/feed.json');
+const awsAPI = require('../helpers/awsAPI');
 
 exports.getAllSummaries = async (req, res, next) => {
   try{
@@ -15,8 +16,12 @@ exports.getAllSummaries = async (req, res, next) => {
 };
 exports.uploadSummary = async (req, res, next) => {
 
-  const pathUrl=req.file.path;
   const title = req.file.originalname;
+  const fileNameUpload = req.file.filename;
+  // Enter the file you want to upload here
+  const folder = 'files';
+   awsAPI.uploadFile(req.file,folder);
+   const pathUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${fileNameUpload}`;
   console.log(req.file);
   const owner = mongoose.Types.ObjectId(req.userId);
   const courseAppId = req.params.courseAppId;

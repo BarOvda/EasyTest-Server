@@ -1,4 +1,3 @@
-const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const webToken = require('jsonwebtoken');
@@ -10,7 +9,7 @@ const examConstants =  require('../constants/exam-constants.json');
 const User = require('../models/user');
 const ExamDirectory = require('../models/examDirectory');
 const userConstants = require('../constants/users.json');
-
+const awsAPI = require('../helpers/awsAPI');
 exports.getUsers = async (req, res, next) => {
   const currentPage = req.query.page || 0;
   const perPage = 10;
@@ -30,8 +29,7 @@ exports.getUsers = async (req, res, next) => {
 };
 
 exports.createUser = async(req, res, next) => {
-  console.log(req.file);
- // console.log(req);
+  //console.log(req.file);
 
   const errors = validationResult(req);
   
@@ -46,8 +44,14 @@ exports.createUser = async(req, res, next) => {
   if (!req.file) {
     imageUrl = userConstants["PATH"];
   }else{
-    imageUrl=req.file.path;
-  }  
+   
+    const fileNameUpload = req.file.filename;
+    // Enter the file you want to upload here
+    
+     awsAPI.uploadFile(req.file,'images');
+     imageUrl = `https://easy-test-s3.s3.amazonaws.com/images/${fileNameUpload}`;
+      console.log(imageUrl);
+  }
   const email = req.body.email;
   const name = req.body.name;
   const password = await bcrypt.hash(req.body.password,12);
@@ -132,10 +136,6 @@ exports.updateUser = async (req, res, next) => { //TODO : Test
   }
 };
 
-const clearImage = filePath => {
-  filePath = path.join(__dirname, '..', filePath);
-  fs.unlink(filePath, err => console.log(err));
-};
 
 exports.getVailidExam = async (req, res, next) => {
   const userId = req.userId;
