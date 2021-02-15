@@ -219,3 +219,22 @@ exports.unFollowCourse = async (req, res, next) => {
     next(err);
   }
 }
+
+exports.getUserDirectories = async (req, res, next) => {
+  const userId = req.userId;
+  try{
+  const user = await ExamDirectory.findById(userId).populate("examsDirectories");
+  if(!user){
+    throw new Error("user not exist");
+  }
+  const examDirectories = user.examsDirectories;
+  res.status(201).json({exam_direcoties:examDirectories});
+
+  }catch(err){
+    next(err);
+
+  }
+
+
+}
+

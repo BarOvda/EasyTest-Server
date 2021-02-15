@@ -7,7 +7,6 @@ const isAuth = require('../auth/is-auth');
 const router = express.Router();
 
 
-
 // GET /exam-directories/{directoryId}
 router.get('/:directoryId',isAuth, examDirectoriesController.getDirectory);//TESTED
 // PUT /exam-directories/upload/:courseId ,HEADER Authentication : token
