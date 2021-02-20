@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "mocha --timeout 5000",
+    "test": "mocha --timeout 10000",
     "start": "nodemon app.js"
   },
   "author": "",

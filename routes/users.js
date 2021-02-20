@@ -46,6 +46,7 @@ router.put( //TESTED
   ],
   usersController.createUser
 );
+
 // GET /users/login
 router.post('/login', //TESTED 
   [
@@ -58,16 +59,14 @@ router.post('/login', //TESTED
 // PUT /users/update-details
 router.put(//TESTED
   '/update-details',
+  upload.single('image'), 
+
   [
-    body('email')
-    .isEmail().withMessage('Please enter a valid email'),
     body('password')
       .trim()
       .isLength({ min: 5 }),
       body('name')
       .trim()
-      .not().isEmpty()
-      
   ],isAuth,
   usersController.updateUser
 );

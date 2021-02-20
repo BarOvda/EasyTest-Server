@@ -10,6 +10,7 @@ const User = require('../models/user');
 const ExamDirectory = require('../models/examDirectory');
 const userConstants = require('../constants/users.json');
 const awsAPI = require('../helpers/awsAPI');
+const { use } = require('../routes/feed');
 exports.getUsers = async (req, res, next) => {
   const currentPage = req.query.page || 0;
   const perPage = 10;
@@ -30,6 +31,7 @@ exports.getUsers = async (req, res, next) => {
 
 exports.createUser = async(req, res, next) => {
   //console.log(req.file);
+  const folder = 'images';
 
   const errors = validationResult(req);
   
@@ -49,8 +51,7 @@ exports.createUser = async(req, res, next) => {
     // Enter the file you want to upload here
     
      awsAPI.uploadFile(req.file,'images');
-     imageUrl = `https://easy-test-s3.s3.amazonaws.com/images/${fileNameUpload}`;
-      console.log(imageUrl);
+     imageUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${fileNameUpload}`;
   }
   const email = req.body.email;
   const name = req.body.name;
@@ -64,7 +65,15 @@ exports.createUser = async(req, res, next) => {
   console.log(user);
   try{
     const result = await user.save();
-    res.status(201).json({user: result});
+
+    const token = webToken.sign({
+      email:result.email,
+      userId:result._id.toString()
+    }
+    ,userConstants.HASH_KEY_CODE
+    //,{expiresIn:'6h'}
+    );
+    res.status(201).json({token:token,user: result});
 
     }catch(err){
       next(err);
@@ -85,7 +94,7 @@ exports.loginUser =async (req, res, next) => {
     throw error;
   }
   loadedUser = user;
-
+  
   const isEqual = await bcrypt.compare(password,user.password);  
   if(!isEqual){
     const error = new Error('Incorrect password.');
@@ -108,27 +117,32 @@ exports.loginUser =async (req, res, next) => {
 exports.updateUser = async (req, res, next) => { //TODO : Test
  // const password = req.body.password;
   let loadedUser;
+  const folder = 'images';
+  console.log(req.body);
   try{
     const user = await User.findById(req.userId);
     if (!user) {
         const error = new Error('Could not find user.');
         error.statusCode = 401;
         throw error;
-      }
+    }
   loadedUser = user;
-  console.log(loadedUser);
   if(req.body.name) loadedUser.name = req.body.name;
-  if(req.body.email) loadedUser.email = req.body.email;
-  if(req.body.password) loadedUser.password = req.body.password;
-  // let imageUrl;
-  // if (req.file)
-  // {
-  //   imageUrl = req.body.image;
-  //   imageUrl = req.file.path;
-  //   loadedUser.imageUrl = req.file.path;
-  // }
+  if(req.body.password){ 
+    const password = await bcrypt.hash(req.body.password,12);
+
+    loadedUser.password = password;}
+  let imageUrl;
+  if (req.file)
+  {
+    console.log("file");
+    const fileNameUpload = req.file.filename;    
+     awsAPI.uploadFile(req.file,`images`);
+     imageUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${fileNameUpload}`;
+     loadedUser.imageUrl = imageUrl;
+  }
   const result = await loadedUser.save();
-    
+    console.log(result);
     res.status(200).json({ user: result });
     }catch(err){
       

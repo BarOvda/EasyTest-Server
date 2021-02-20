@@ -11,11 +11,11 @@ const examDirectorySchema = new Schema({
   uploadDate: {
     type: String,
     default: Date.now
-  },
-  pathUrl: {
-    type: String,
-    required: false
   }
+  // ,pathUrl: {
+  //   type: String,
+  //   required: false
+  // }
   ,summaries:[{
         type: Schema.Types.ObjectId, 
         ref: 'Summary' 

@@ -90,7 +90,9 @@ exports.getAllCourseAppearances =async (req, res, next) => {
   const courseId = req.params.courseId;
   try{
     const course = await Course.findById(courseId).populate('appearances');
+    console.log(course);
     const appearances = course.appearances;
+    console.log(appearances);
     res.status(200).json({appearances: appearances});
   }catch (err){
     next(err);
