@@ -48,9 +48,10 @@ exports.uploadCourseAppearance =async (req, res, next) => {
       next(err);
     } 
 };
+//TODO create exam directory with user and course details
 exports.addStudent =async (req, res, next) => {
   const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
-  const userId = mongoose.Types.ObjectId(req.params.userId);
+  const userId = req.userId;
   try{
   const course =await CourseAppearance.findById(courseId);
   const user =await User.findById(userId);

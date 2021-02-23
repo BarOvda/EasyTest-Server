@@ -1,5 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
+const isAuth = require('../auth/is-auth');
 const coursesAppController = require('../controllers/courseAppearances');
 
 const router = express.Router();
@@ -21,8 +22,8 @@ router.put(
     coursesAppController.uploadCourseAppearance);
     //PUT /course-appearances/add-student/:courseAppId/:userId
 router.put(
-    '/add-student/:courseAppId/:userId',//TESTED ,TODO - add lecturer permissions
-    
-    coursesAppController.addStudent);
+    '/add-student/:courseAppId',//TESTED ,TODO - add lecturer permissions
+    isAuth
+    ,coursesAppController.addStudent);
     
     module.exports = router;

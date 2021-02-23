@@ -21,7 +21,7 @@ var upload = multer({storage:fileStorage});
 // GET /users/all-users
 router.get('/all-users', usersController.getUsers); //TESTED
 // GET /users/directories
-router.get('/directories/:userId',isAuth, usersController.getUserDirectories);//TODO
+router.get('/directories',isAuth, usersController.getUserDirectories);//TODO
 // PUT /users/sign-up
 router.put( //TESTED 
   '/sign-up',

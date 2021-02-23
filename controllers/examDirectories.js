@@ -39,8 +39,8 @@ exports.getDirectory = async (req, res, next) => {
     const directoryId = mongoose.Types.ObjectId(req.params.directoryId);
     
     try{
-    const directory = await ExamDirectory.findById(directoryId);
-    console.log(directory.owner);
+    const directory = await ExamDirectory.findById(directoryId).populate("summaries");
+    console.log(directory);
     console.log(req.userId);
     if(directory.owner!=req.userId)
       throw new Error('Autantication failiaure');
