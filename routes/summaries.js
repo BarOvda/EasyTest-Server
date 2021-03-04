@@ -34,6 +34,13 @@ router.put(//TESTED
   , upload.single('file')
   , summaryController.uploadSummaryToDirectory
 );
+// PUT /summaries/upload/directory/:directoryId
+router.delete(//TESTED
+  '/summary/directory/:summaryId'
+  , isAuth
+  , summaryController.deleteSummaryFromDirectory
+);
+
 
 // GET /summaries/my-uploads
 router.get(//TESTED

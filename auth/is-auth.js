@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const userConstants = require('../constants/users.json')
 
 module.exports = (req, res, next) => {
-
+  console.log("test");
    const authHeader = req.get('Authorization');
   try {
     if (!authHeader) {

@@ -87,7 +87,8 @@ exports.loginUser = async (req, res, next) => {
   console.log(email);
   let loadedUser;
   try {
-    const user = await User.findOne({ email: email });
+
+    const user = await User.findOne({ email: email }).populate("examsDirectories");
     if (!user) {
       const error = new Error('Could not find user.');
       error.statusCode = 401;

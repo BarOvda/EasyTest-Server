@@ -16,7 +16,7 @@ exports.getAllSummaries = async (req, res, next) => {
   }
 };
 exports.uploadSummary = async (req, res, next) => {
-
+  console.log(req.file);
   const title = req.file.originalname;
   const fileNameUpload = req.file.filename;
   // Enter the file you want to upload here
@@ -170,4 +170,7 @@ exports.uploadSummaryToDirectory = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+}
+exports.deleteSummaryFromDirectory = async (req, res, next) => {
+
 }
