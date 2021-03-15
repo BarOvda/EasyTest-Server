@@ -160,20 +160,20 @@ exports.getVailidExam = async (req, res, next) => {
 
   const upperDateLimit = dateUtils.addMinutes(currentDate, examConstants['NUM-OF-MAXIMUM-MINUTS-AFTER-EXAM-TO-LOGIN']);
   const lowerDateLimit = dateUtils.addMinutes(currentDate, examConstants['NUM-OF-MAXIMUM-MINUTS-BEFOR-EXAM-TO-LOGIN']);
-  console.log(upperDateLimit);
+  console.log(currentDate);
 
   try {
     const course = await CourseAppearance.findOne({
       $or: [{
         $and: [
-          { examsDateA: { $lte: upperDateLimit } },
-          { examsDateA: { $gte: lowerDateLimit } },
+          { "exams.exam": { $lte: upperDateLimit } },
+          { "exams.exam": { $gte: lowerDateLimit } },
           { students: userId }
         ]
       }, {
         $and: [
-          { examsDateB: { $lte: upperDateLimit } },
-          { examsDateB: { $gte: lowerDateLimit } },
+          { "exams.remake": { $lte: upperDateLimit } },
+          { "exams.remake": { $gte: lowerDateLimit } },
           { students: userId }
         ]
       }]
