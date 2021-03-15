@@ -95,7 +95,8 @@ exports.loginUser = async (req, res, next) => {
       throw error;
     }
     loadedUser = user;
-
+    console.log(password);
+    console.log(user.password);
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
       const error = new Error('Incorrect password.');
@@ -155,13 +156,11 @@ exports.updateUser = async (req, res, next) => { //TODO : Test
 exports.getVailidExam = async (req, res, next) => {
   const userId = req.userId;
   console.log(userId);
-
-
   const currentDate = new Date();
-  //console.log(currentDate);
+
   const upperDateLimit = dateUtils.addMinutes(currentDate, examConstants['NUM-OF-MAXIMUM-MINUTS-AFTER-EXAM-TO-LOGIN']);
   const lowerDateLimit = dateUtils.addMinutes(currentDate, examConstants['NUM-OF-MAXIMUM-MINUTS-BEFOR-EXAM-TO-LOGIN']);
-  //console.log(upperDateLimit);
+  console.log(upperDateLimit);
 
   try {
     const course = await CourseAppearance.findOne({
@@ -241,11 +240,17 @@ exports.getUserDirectories = async (req, res, next) => {
   const userId = req.userId;
   console.log(userId);
   try {
-    const user = await User.findById(userId).populate("examsDirectories");
+    const user = await User.findById(userId).populate({
+    path : 'examsDirectories',
+    populate : {
+      path : 'courseId'}
+    });
     if (!user) {
       throw new Error("user not exist");
     }
+
     const examDirectories = user.examsDirectories;
+    
     res.status(201).json({ exam_direcoties: examDirectories });
 
   } catch (err) {

@@ -26,11 +26,13 @@ exports.uploadSummary = async (req, res, next) => {
   console.log(req.file);
   const owner = mongoose.Types.ObjectId(req.userId);
   const courseAppId = req.params.courseAppId;
+  const isPrivate = req.body.isPrivate;
   const summary = new Summary({
     title: title,
     owner: owner,
     pathUrl: pathUrl,
-    courseAppearance: courseAppId
+    courseAppearance: courseAppId,
+    isPrivate: isPrivate
   });
 
   try {
@@ -124,7 +126,7 @@ exports.getSummaryDetailes = async (req, res, next) => {
 exports.searchByKeyWord = async (req, res, next) => {
   const keyWord = req.body.keyWord;
   try {
-    const searchResult = await Summary.find({ $text: { $search: keyWord } });
+    const searchResult = await Summary.find({ $text: { $search: keyWord }, isPrivate: false });
     console.log(searchResult);
     if (!searchResult)
       throw new Error("there is no results");
@@ -147,24 +149,25 @@ exports.uploadSummaryToDirectory = async (req, res, next) => {
   try {
     let directory = await ExamDirectory.findById(directoryId);
     const courseAppId = directory.courseId;
-    console.log(courseAppId);
+    const isPrivate = req.body.isPrivate;
     const summary = new Summary({
       title: title,
       owner: owner,
       pathUrl: pathUrl,
-      courseAppearance: courseAppId
+      courseAppearance: courseAppId,
+      isPrivate: isPrivate
     });
     let user = await User.findById(owner);
     const result = await summary.save();
     directory.summaries.push(result._id);
-    console.log(directory.summaries);
-    
+    //console.log(directory.summaries);
+
     directory = await directory.save();
 
     user.uploadedSummaries.push(result);
-    
+
     user = await user.save();
-    
+
     res.status(201).json({ directory: directory });
 
   } catch (err) {
@@ -172,5 +175,32 @@ exports.uploadSummaryToDirectory = async (req, res, next) => {
   }
 }
 exports.deleteSummaryFromDirectory = async (req, res, next) => {
+  const userId = req.userId;
+  const summaryId = mongoose.Types.ObjectId(req.params.summaryId);
+  const directoryId = mongoose.Types.ObjectId(req.params.directoryId);
+
+  try {
+    let directory = await ExamDirectory.findById(directoryId);
+    if (!directory)
+      throw new Error('Directory does not found.')
+    const summaries = directory.summaries;
+    if (!summaries)
+      throw new Error('Empty Directory.')
+    const summary = summaries.find(file => file._id === summaryId);
+    if (!summary)
+      throw new Error('Summary not Found in the Directory.')
+    directory.summaries.pull({ _id: summaryId }) // removed
+    const folder = 'files';
+    console.log(summary.isPrivate);
+    if (summary.isPrivate == true) {
+      awsAPI.deleteFile(summary.title, folder);
+      console.log("to delete");
+    }
+    const result = await directory.save();
+    res.status(201).json({ result: result });
+  } catch (err) {
+    next(err);
+
+  }
 
 }

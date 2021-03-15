@@ -17,7 +17,7 @@ const ExamsController = require('../controllers/examDirectories');
 const CoursesController = require('../controllers/courseAppearances');
 
 let user = new User({
-  email: 'bar-test-hash@gmail.com',
+  email: 'manager@easy-test.com',
   password: '$2y$12$NM9BXE5eB..vpPiV.lpnH.1l6YgAhdGXDtvrtpSLIcN0SEFBRGWba',
   name: 'Bar Ovda',
   imageUrl: 'Dummy-Path',

@@ -15,32 +15,41 @@ const summarySchema = new Schema({
   },
   pathUrl: {
     type: String,
-    required: false
+    required: true
   },
   owner:{
      type: Schema.Types.ObjectId, 
-     ref: 'User' 
+     ref: 'User' ,
+     required:true
   },
   courseAppearance:{
     type: Schema.Types.ObjectId, 
-     ref: 'CourseAppearance'
+     ref: 'CourseAppearance',
+     required:true
   }
   ,
   usersRank:[{
    user:{
     type: Schema.Types.ObjectId, 
     ref: 'Users',
-    required:false
+    required:true
    } ,
     rank:{
       type: Number, 
-     required:false
-    }
+     required:true
+    },
+    default:[]
+    
   }],
   rank:{
     type: Number, 
-     required:false,
+     required:true,
      default:0
+  },
+  isPrivate:{
+    type:Boolean,
+    required:true,
+    default:false
   }
 });
 summarySchema.index({ title: 'text'});

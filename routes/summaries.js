@@ -24,6 +24,7 @@ router.put(//TESTED
   '/upload/:courseAppId'
   , isAuth
   , upload.single('file')
+  , [body('isPrivate')]
   , summaryController.uploadSummary
 );
 
@@ -32,11 +33,12 @@ router.put(//TESTED
   '/upload/directory/:directoryId'
   , isAuth
   , upload.single('file')
+  , [body('isPrivate')]
   , summaryController.uploadSummaryToDirectory
 );
-// PUT /summaries/upload/directory/:directoryId
+// DELETE /summaries/directory/:directoryId/:summaryId
 router.delete(//TESTED
-  '/summary/directory/:summaryId'
+  '/directory/:directoryId/:summaryId'
   , isAuth
   , summaryController.deleteSummaryFromDirectory
 );

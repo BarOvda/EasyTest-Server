@@ -14,44 +14,44 @@ const fileStorage = multer.diskStorage({
   }
 });
 
-var upload = multer({storage:fileStorage});
+var upload = multer({ storage: fileStorage });
 
 
 
 // GET /users/all-users
 router.get('/all-users', usersController.getUsers); //TESTED
 // GET /users/directories
-router.get('/directories',isAuth, usersController.getUserDirectories);//TODO
+router.get('/directories', isAuth, usersController.getUserDirectories);//TODO
 // PUT /users/sign-up
 router.put( //TESTED 
   '/sign-up',
-  upload.single('image'), 
+  upload.single('image'),
   [
     body('email')
-    .isEmail().withMessage('Please enter a valid email')
-      .custom((value,{req})=>{
-          return User.findOne({email:value}).then(userDoc=>{
-            if(userDoc){
-              return Promise.reject('Email addres already exists.');
-            }
-          })
+      .isEmail().withMessage('Please enter a valid email')
+      .custom((value, { req }) => {
+        return User.findOne({ email: value }).then(userDoc => {
+          if (userDoc) {
+            return Promise.reject('Email addres already exists.');
+          }
+        })
       }).normalizeEmail(),
     body('password')
       .trim()
       .isLength({ min: 5 }),
-      body('name')
+    body('name')
       .trim()
       .not().isEmpty()
-      
+
   ],
   usersController.createUser
 );
 
-// GET /users/login
+// POST /users/login
 router.post('/login', //TESTED 
   [
     body('email')
-    .isEmail().withMessage('Please enter a valid email'),
+      .isEmail().withMessage('Please enter a valid email'),
     body('password')
       .trim()
       .isLength({ min: 5 })
@@ -59,31 +59,31 @@ router.post('/login', //TESTED
 // PUT /users/update-details
 router.put(//TESTED
   '/update-details',
-  upload.single('image'), 
+  upload.single('image'),
 
   [
     body('password')
       .trim()
       .isLength({ min: 5 }),
-      body('name')
+    body('name')
       .trim()
-  ],isAuth,
+  ], isAuth,
   usersController.updateUser
 );
 // GET /users/exam
 router.get('/exam', //TESTED
   isAuth,
   usersController.getVailidExam);
-  /// PUT users/follow-course/:courseId
-  router.put( //TESTED
-    '/follow-course/:courseId',
-    isAuth,
-    usersController.followCourse
-  );
+/// PUT users/follow-course/:courseId
+router.put( //TESTED
+  '/follow-course/:courseId',
+  isAuth,
+  usersController.followCourse
+);
 
-  router.put( //TESTED
-    '/unfollow-course/:courseId',
-    isAuth,
-    usersController.unFollowCourse
-  );
+router.put( //TESTED
+  '/unfollow-course/:courseId',
+  isAuth,
+  usersController.unFollowCourse
+);
 module.exports = router;
