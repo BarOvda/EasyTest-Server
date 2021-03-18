@@ -63,11 +63,11 @@ router.put(//TESTED!
   , [body('rank')]
   , summaryController.rankUp);
 
-// Post /summaries/search/key-word'
+// Post /summaries/search/key-word
 
 router.post(
   '/search/key-word'
   // ,isAuth
-  , [body('keyWord')]
+  , [body('keyWord'),body('courseId')]
   , summaryController.searchByKeyWord);
 module.exports = router;

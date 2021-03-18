@@ -4,6 +4,7 @@ const Summary = require('../models/summary');
 const feedConstants = require('../constants/feed.json');
 const awsAPI = require('../helpers/awsAPI');
 const ExamDirectory = require('../models/examDirectory');
+const CourseAppearance = require('../models/courseAppearance');
 
 exports.getAllSummaries = async (req, res, next) => {
   try {
@@ -67,16 +68,29 @@ exports.rankUp = async (req, res, next) => {
   const userId = req.userId;
   const rank = req.body.rank;
   const summaryId = mongoose.Types.ObjectId(req.params.summaryId);
+  let exists = 0;
   try {
     let summary = await Summary.findById(summaryId);
-    console.log(userId);
-
-    if (summary.usersRank.some(s => s.user.toString() === userId))
-      throw new Error('The user alredy ranked this summary');
     const numberOfRanks = summary.usersRank.length;
-    summary.rank = ((summary.rank * numberOfRanks) + rank) / (numberOfRanks + 1);
-    summary.usersRank.push({ user: userId, rank: rank });
-    summary = await summary.save();
+
+    summary.usersRank.forEach(element => {
+      if (element.user.toString() === userId) {
+        summary.rank = ((summary.rank * numberOfRanks) - element.usersRank + rank) / (numberOfRanks);
+
+        element.usersRank = rank;
+        exists = 1;
+      }
+    })
+    if (exists == 0) {
+      console.log("id");
+
+      summary.usersRank.push({ user: userId, rank: rank });
+      summary.rank = ((summary.rank * (numberOfRanks)) + rank) / (numberOfRanks + 1);
+      summary = await summary.save();
+    } else {
+      console.log("UPDATE");
+      summary = await summary.updateOne({ "usersRank.user": userId }, summary);
+    }
     res.status(200).json({ summary: summary });
   } catch (err) {
     next(err);
@@ -125,8 +139,41 @@ exports.getSummaryDetailes = async (req, res, next) => {
 
 exports.searchByKeyWord = async (req, res, next) => {
   const keyWord = req.body.keyWord;
+  let courseId = req.body.courseId;
+  let appearnces;
   try {
-    const searchResult = await Summary.find({ $text: { $search: keyWord }, isPrivate: false });
+    let searchResult;
+    if (courseId === undefined) {
+
+      searchResult = await Summary.find({ $text: { $search: keyWord }, isPrivate: false });
+    } else if (keyWord === undefined) {
+      courseId = mongoose.Types.ObjectId(courseId);
+      console.log(courseId);
+      // console.log("courseSearcj");      
+
+      appearnces = await CourseAppearance.find({ couresId: courseId });
+
+      appearnces = appearnces.map(app => app._id);
+
+      searchResult = await Summary.find({
+        courseAppearance: {
+          $in: [appearnces]
+        }, isPrivate: false
+      });
+
+    } else {
+      courseId = mongoose.Types.ObjectId(courseId);
+      appearnces = await CourseAppearance.find({ couresId: courseId });
+
+      appearnces = appearnces.map(app => app._id);
+
+      searchResult = await Summary.find({
+        $text: { $search: keyWord },courseAppearance: {
+          $in: [appearnces]
+        }, isPrivate: false
+      });
+      
+    }
     console.log(searchResult);
     if (!searchResult)
       throw new Error("there is no results");

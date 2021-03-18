@@ -29,8 +29,8 @@ exports.getFeed = async (req, res, next) => {
         var i;
         let feed = [];
         for (i = 0; i < appearancesIds.length; i++) {
-            let sum = await Summary.find({ courseAppearance: appearancesIds, isPrivate: false });
-            feed.push.apply(feed, sum);
+            let sum = await Summary.find({ courseAppearance: appearancesIds[i], isPrivate: false });
+            feed.push.apply( feed,sum);
         }
         console.log(feed);
         res.status(200).json({ data: feed });
