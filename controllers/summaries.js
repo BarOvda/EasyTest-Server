@@ -127,7 +127,7 @@ exports.getUsersRank = async (req, res, next) => {
 exports.getSummaryDetailes = async (req, res, next) => {
   try {
     const summaryId = mongoose.Types.ObjectId(req.params.id);
-    const summary = await Summary.findById(summaryId).populate('usersRank');//TODO Check it
+    const summary = await Summary.findById(summaryId).populate('usersRank').populate('courseAppearance');//TODO Check it
     res.status(200).json({ summary: summary });
 
   } catch (err) {

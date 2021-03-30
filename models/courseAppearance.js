@@ -25,6 +25,10 @@ const courseAppearanceSchema = new Schema({
       withMaterials:{
          type:Boolean,
          default:false
+      },
+      duration:{
+         type:Number,
+         default:0
       }
       
       

@@ -6,7 +6,6 @@ const CourseAppearance = require('../models/courseAppearance');
 const Course = require('../models/course');
 const User = require('../models/user');
 
-
 exports.uploadCourseAppearance =async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseId);
     console.log(req.body.courseId);
@@ -26,12 +25,18 @@ exports.uploadCourseAppearance =async (req, res, next) => {
     console.log(Date.now());
     const examsDateA = new Date(req.body.examsDateA);
     const examsDateB = new Date(req.body.examsDateB);
+    const duration = req.body.examDuration;
+    const withMaterials = req.body.isExamWithMatearials;
     
     const courseAppearance = new CourseAppearance({
         name :name,
         courseId:courseId,
-        examsDateA:examsDateA,
-        examsDateB:examsDateB
+        exams:{
+          exam:examsDateA,
+          remake:examsDateB,
+          withMaterials:withMaterials,
+          duration:duration
+        }
     })
     try{
       let result = await courseAppearance.save();

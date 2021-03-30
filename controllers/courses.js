@@ -78,17 +78,18 @@ exports.getAllCourses = async (req, res, next) => {
 exports.searchByKeyWord = async (req, res, next) => {
   
   const keyWord = req.body.keyWord;
-
+  console.log(keyWord);
   //const userId = req.userId;
   const currentPage = (+req.query.page || 1) - 1;
-  const perPage = +req.query.per_page;
+  const perPage = +req.query.per_page||2;
 
   try {
     const totalCount = await Course.find({ $text: { $search: keyWord } }).countDocuments();
+    console.log(totalCount);
     const searchResult = await Course.find({ $text: { $search: keyWord } })  
     .skip(currentPage * perPage)
     .limit(perPage);
-
+    
     if (!searchResult)
       throw new Error("there is no results");
     res.status(200).json({ results: searchResult ,items_per_page: perPage, current_page: currentPage + 1, total_items: totalCount });

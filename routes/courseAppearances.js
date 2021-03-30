@@ -13,7 +13,8 @@ router.put(
         .trim()
         .not().isEmpty() 
         ,
-        
+        body('examDuration'),
+        body('isExamWithMatearials'),
         body('examsDateA')
         ,
         body('examsDateB')
