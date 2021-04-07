@@ -11,6 +11,16 @@ const ExamDirectory = require('../models/examDirectory');
 const userConstants = require('../constants/users.json');
 const awsAPI = require('../helpers/awsAPI');
 const { use } = require('../routes/feed');
+
+
+exports.getUsersDetails = async (req, res, next) => {
+  try {
+    const users = await User.find();
+    res.status(200).json({ users: users });
+  } catch (err) {
+    next(err);
+  }
+}
 exports.getUsers = async (req, res, next) => {
   const currentPage = req.query.page || 0;
   const perPage = 10;
@@ -55,12 +65,14 @@ exports.createUser = async (req, res, next) => {
   }
   const email = req.body.email;
   const name = req.body.name;
+  const role = req.body.role || "USER";
   const password = await bcrypt.hash(req.body.password, 12);
   const user = new User({
     email: email,
     name: name,
     imageUrl: imageUrl,
-    password: password
+    password: password,
+    role: role
   });
   console.log(user);
   try {
@@ -241,16 +253,17 @@ exports.getUserDirectories = async (req, res, next) => {
   console.log(userId);
   try {
     const user = await User.findById(userId).populate({
-    path : 'examsDirectories',
-    populate : {
-      path : 'courseId'}
+      path: 'examsDirectories',
+      populate: {
+        path: 'courseId'
+      }
     });
     if (!user) {
       throw new Error("user not exist");
     }
 
     const examDirectories = user.examsDirectories;
-    
+
     res.status(201).json({ exam_direcoties: examDirectories });
 
   } catch (err) {

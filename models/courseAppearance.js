@@ -10,39 +10,33 @@ const courseAppearanceSchema = new Schema({
    couresId: {
       type: Schema.Types.ObjectId,
       ref: 'Course',
-      required:true
+      required: true
    },
 
    exams: {
       exam: {
          type: Date,
-         default:Date.now() //onlyForTesting!
+         default: Date.now() //onlyForTesting!
       },
       remake: {
          type: Date
-         ,default:Date.now() //onlyForTesting!
+         , default: Date.now() //onlyForTesting!
       },
-      withMaterials:{
-         type:Boolean,
-         default:false
+      withMaterials: {
+         type: Boolean,
+         default: false
       },
-      duration:{
-         type:Number,
-         default:0
+      duration: {
+         type: Number,
+         default: 0
       }
-      
-      
    }
    ,
    students: [{
       type: Schema.Types.ObjectId,
       ref: 'User'
    }]
-   //,
-   // directories:[{
-   //    type: Schema.Types.ObjectId, 
-   //    ref: 'ExamDirectory' 
-   // }]
+
 });
 
 module.exports = mongoose.model('CourseAppearance', courseAppearanceSchema);

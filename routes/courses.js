@@ -8,40 +8,54 @@ const router = express.Router();
 
 // GET /courses/all
 router.get('/all'
-  ,isAuth
-, coursesController.getAllCourses); //TESTED
+  , isAuth
+  , coursesController.getAllCourses); //TESTED
 
 // GET /courses/all-appearances
 router.get('/all-appearances/:courseId'
-, coursesController.getAllCourseAppearances); //TESTED
+  , coursesController.getAllCourseAppearances); //TESTED
 // GET /courses/allcourses
 router.get('/allcourses'
-  ,isAuth
-, coursesController.getUnfollowedCourses); //TESTED
+  , isAuth
+  , coursesController.getUnfollowedCourses); //TESTED
 
 router.get('/followed-courses'
-  ,isAuth
-, coursesController.getFollowedCourses); //TESTED
+  , isAuth
+  , coursesController.getFollowedCourses); //TESTED
 //PUT /courses/upload
 router.put(//TESTED
-    '/upload',
-    [
-        body('name')
-        .trim()
-        .not().isEmpty() 
-        .custom((value,{req})=>{
-            return Course.findOne({name:value}).then(courseDoc=>{
-              if(courseDoc){
-                return Promise.reject('Course is already exists.');
-              }
-            })
-        })  
-    ],
-    coursesController.uploadCourse);
-    // POST courses/search/key-word
+  '/upload',
+  [
+    body('name')
+      .trim()
+      .not().isEmpty()
+      .custom((value, { req }) => {
+        return Course.findOne({ name: value }).then(courseDoc => {
+          if (courseDoc) {
+            return Promise.reject('Course is already exists.');
+          }
+        })
+      })
+  ],
+  coursesController.uploadCourse);
+// POST courses/search/key-word
 router.post(
-      '/search/key-word'
-     // ,isAuth
-    ,[ body('keyWord')]
-      ,coursesController.searchByKeyWord);
+  '/search/key-word'
+  // ,isAuth
+  , [body('keyWord')]
+  , coursesController.searchByKeyWord);
+
+// PUT /courses/update-details
+router.put(//TESTED
+  '/update-details',
+  [
+    body('name')
+      .trim()
+  ], isAuth,
+  coursesController.updateCourse
+);
+
+// DELETE /courses/all-appearances
+router.delete('/delete/:courseId'
+  , coursesController.deleteCourse); //TESTED
 module.exports = router;

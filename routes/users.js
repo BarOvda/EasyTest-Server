@@ -17,9 +17,10 @@ const fileStorage = multer.diskStorage({
 var upload = multer({ storage: fileStorage });
 
 
-
 // GET /users/all-users
-router.get('/all-users', usersController.getUsers); //TESTED
+router.get('/all-users', usersController.getUsersDetails); //TESTED
+// GET /users/all-users/pageination
+router.get('/all-users/pageination', usersController.getUsers); //TESTED
 // GET /users/directories
 router.get('/directories', isAuth, usersController.getUserDirectories);//TODO
 // PUT /users/sign-up

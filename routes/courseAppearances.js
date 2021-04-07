@@ -10,8 +10,8 @@ router.put(
     '/upload/:courseId',
     [
         body('name')
-        .trim()
-        .not().isEmpty() 
+            .trim()
+            .not().isEmpty()
         ,
         body('examDuration'),
         body('isExamWithMatearials'),
@@ -21,10 +21,44 @@ router.put(
         //.isDate().withMessage("The date is not valid")
     ],
     coursesAppController.uploadCourseAppearance);
-    //PUT /course-appearances/add-student/:courseAppId/:userId
+
+    //PUT /course-appearances/update
 router.put(
-    '/add-student/:courseAppId',//TESTED ,TODO - add lecturer permissions
+    '/update/:courseAppId',
+    [
+        body('name')
+            .trim()
+            .not().isEmpty()
+        ,
+        body('examDuration'),
+        body('isExamWithMatearials'),
+        body('examsDateA')
+        ,
+        body('examsDateB')
+        //.isDate().withMessage("The date is not valid")
+    ],
+    coursesAppController.updateCourseApp);
+
+//PUT /course-appearances/add-student/:courseAppId/:userId
+router.put(
+    '/add-student/:courseAppId',//TESTED ,TODO - add admin permissions
+    isAuth,
+    [
+        body('userId')
+    ]
+    , coursesAppController.addStudent);
+
+//PUT /delete-appearances/add-student/:courseAppId/:userId
+router.put(
+    '/delete-student/:courseAppId',//TESTED ,TODO - add admin permissions
     isAuth
-    ,coursesAppController.addStudent);
-    
-    module.exports = router;
+    , coursesAppController.deleteStudent);
+
+//GET /course-appearances/students/:courseAppId
+router.get(
+    '/students/:courseAppId',//TODO -test
+    isAuth
+    , coursesAppController.getStudents);
+
+
+module.exports = router;
