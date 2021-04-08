@@ -144,9 +144,9 @@ exports.deleteCourse = async (req, res, next) => { //TODO : Test
       error.statusCode = 401;
       throw error;
     }
-    course.appearances.forEach(element => {
-      await courseAppearance.findByIdAndDelete(element._id);
-    });
+    // course.appearances.forEach(element => {
+    //   await courseAppearance.findByIdAndDelete(element._id);
+    // });
     res.status(200).json({ course: course });
   } catch (err) {
     next(err);
