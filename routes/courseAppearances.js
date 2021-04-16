@@ -39,7 +39,7 @@ router.put(
     ],
     coursesAppController.updateCourseApp);
 
-//PUT /course-appearances/add-student/:courseAppId/:userId
+//PUT /course-appearances/add-student/:courseAppId
 router.put(
     '/add-student/:courseAppId',//TESTED ,TODO - add admin permissions
     isAuth,
