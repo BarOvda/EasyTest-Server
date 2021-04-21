@@ -5,9 +5,9 @@ const coursesAppController = require('../controllers/courseAppearances');
 
 const router = express.Router();
 
-//PUT /course-appearances/upload
+//PUT /course-appearances/upload/:courseId
 router.put(
-    '/upload/:courseId', [
+    '/upload/:coresId', [
         body('name')
         .trim()
         .not().isEmpty(),
