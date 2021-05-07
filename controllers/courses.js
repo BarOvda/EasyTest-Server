@@ -178,3 +178,4 @@ exports.deleteAppearance = async(req, res, next) => { //TODO : Test
         next(err);
     }
 };
+

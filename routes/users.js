@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const isAuth = require('../auth/is-auth');
+const isAuth = require('../middlewares/IsAuth.middleware');
 const usersController = require('../controllers/users');
 const User = require('../models/user');
 const router = express.Router();
@@ -56,7 +56,7 @@ router.post('/login', //TESTED
     body('password')
       .trim()
       .isLength({ min: 5 })
-  ], usersController.loginUser);
+  ], usersController.loginUserToExam);
 // PUT /users/update-details
 router.put(//TESTED
   '/update-details',

@@ -5,37 +5,37 @@ const CourseAppearance = require('../models/courseAppearance');
 const Course = require('../models/course');
 const User = require('../models/user');
 
-exports.uploadCourseAppearance = async(req, res, next) => {
+exports.uploadCourseAppearance = async (req, res, next) => {
     const coresId = mongoose.Types.ObjectId(req.params.coresId);
     console.log(req.params.coresId);
 
     //const errors = validationResult(req);
     try {
         var course = await Course.findById(coresId);
- 
-    const name = req.body.name;
-    console.log(Date.now());
-    const examsDateA = new Date(req.body.examsDateA);
-    const examsDateB = new Date(req.body.examsDateB);
-    const duration = req.body.examDuration;
-    const withMaterials = req.body.isExamWithMatearials;
 
-    const courseAppearance = new CourseAppearance({
-        name: name,
-        couresId: coresId,
-        exams: {
-            exam: examsDateA,
-            remake: examsDateB,
-            withMaterials: withMaterials,
-            duration: duration
-        }
-    })
-    let result = await courseAppearance.save();
+        const name = req.body.name;
+        console.log(Date.now());
+        const examsDateA = new Date(req.body.examsDateA);
+        const examsDateB = new Date(req.body.examsDateB);
+        const duration = req.body.examDuration;
+        const withMaterials = req.body.isExamWithMatearials;
 
-    course.appearances.push(result);
+        const courseAppearance = new CourseAppearance({
+            name: name,
+            couresId: coresId,
+            exams: {
+                exam: examsDateA,
+                remake: examsDateB,
+                withMaterials: withMaterials,
+                duration: duration
+            }
+        })
+        let result = await courseAppearance.save();
 
-     console.log(req.params.coresId);
-          await course.save();
+        course.appearances.push(result);
+
+        console.log(req.params.coresId);
+        await course.save();
         res.status(201).json({ appearances: result });
     } catch (err) {
         if (!err.statusCode)
@@ -43,10 +43,10 @@ exports.uploadCourseAppearance = async(req, res, next) => {
         next(err);
     }
 
-     
-   
+
+
 };
-exports.deleteStudent = async(req, res, next) => {
+exports.deleteStudent = async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
     const userId = req.body.userId;
     try {
@@ -75,7 +75,7 @@ exports.deleteStudent = async(req, res, next) => {
 }
 
 //TODO create exam directory with user and course details
-exports.addStudent = async(req, res, next) => {
+exports.addStudent = async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
     const userId = req.body.userId;
     try {
@@ -99,7 +99,7 @@ exports.addStudent = async(req, res, next) => {
         next(err);
     }
 };
-exports.getStudents = async(req, res, next) => {
+exports.getStudents = async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
 
     try {
@@ -116,7 +116,7 @@ exports.getStudents = async(req, res, next) => {
 };
 
 
-exports.updateCourseApp = async(req, res, next) => { //TODO : Test
+exports.updateCourseApp = async (req, res, next) => { //TODO : Test
     let loadedCourse;
     const courseId = req.params.courseAppId;
     try {
@@ -142,7 +142,7 @@ exports.updateCourseApp = async(req, res, next) => { //TODO : Test
         next(err);
     }
 };
-exports.deleteCourse = async(req, res, next) => { //TODO : Test
+exports.deleteCourse = async (req, res, next) => { //TODO : Test
     const courseId = req.params.courseId;
     try {
         const course = await CourseAppearance.findByIdAndDelete(courseId);

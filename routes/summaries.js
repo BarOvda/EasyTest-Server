@@ -1,8 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const multer = require('multer');
-const isAuth = require('../auth/is-auth');
-const fileStorage = multer.diskStorage({
+const isAuth = require('../middlewares/IsAuth.middleware');const fileStorage = multer.diskStorage({
   // destination: (req, file, cb) => {
   //   cb(null, 'public/files');
   // },

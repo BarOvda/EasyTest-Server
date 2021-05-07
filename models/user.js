@@ -24,6 +24,10 @@ const userSchema = new Schema({
   imageUrl: {
     type: String,
     required: true
+  },
+  isLoggedToExam: {
+    type: Boolean,
+    required: false
   }
   ,
   uploadedSummaries:[{

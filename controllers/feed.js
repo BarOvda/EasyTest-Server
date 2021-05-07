@@ -17,20 +17,23 @@ exports.getFeed = async (req, res, next) => {
         }
         let appearancesIds = [];
         courses.forEach(course => {
-            course.appearances.forEach(app => {
-                if (mongoose.Types.ObjectId.isValid(app._id)) {
-                    let convertedId = mongoose.Types.ObjectId(app._id);
-                    appearancesIds.push(convertedId);
-                }
-            });
+            if (course != null) {
+                course.appearances.forEach(app => {
+                    if (app != null && mongoose.Types.ObjectId.isValid(app._id)) {
+                        let convertedId = mongoose.Types.ObjectId(app._id);
+                        appearancesIds.push(convertedId);
+                    }
+                });
+            }
         });
 
         console.log(appearancesIds);
         var i;
         let feed = [];
         for (i = 0; i < appearancesIds.length; i++) {
-            let sum = await Summary.find({ courseAppearance: appearancesIds[i], isPrivate: false });
-            feed.push.apply( feed,sum);
+            let sum = await Summary.find({ courseAppearance: appearancesIds[i], isPrivate: false })
+                .populate("owner");
+            feed.push.apply(feed, sum);
         }
         console.log(feed);
         res.status(200).json({ data: feed });

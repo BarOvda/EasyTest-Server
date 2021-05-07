@@ -2,8 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 
 const examDirectoriesController = require('../controllers/examDirectories');
-const isAuth = require('../auth/is-auth');
-
+const isAuth = require('../middlewares/IsAuth.middleware');
 const router = express.Router();
 
 // GET /exam-directories/{directoryId}

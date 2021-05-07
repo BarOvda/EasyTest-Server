@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const isAuth = require('../auth/is-auth');
+const isAuth = require('../middlewares/IsAuth.middleware');
 const coursesAppController = require('../controllers/courseAppearances');
 
 const router = express.Router();
@@ -8,37 +8,37 @@ const router = express.Router();
 //PUT /course-appearances/upload/:courseId
 router.put(
     '/upload/:coresId', [
-        body('name')
+    body('name')
         .trim()
         .not().isEmpty(),
-        body('examDuration'),
-        body('isExamWithMatearials'),
-        body('examsDateA'),
-        body('examsDateB')
-        //.isDate().withMessage("The date is not valid")
-    ],
+    body('examDuration'),
+    body('isExamWithMatearials'),
+    body('examsDateA'),
+    body('examsDateB')
+    //.isDate().withMessage("The date is not valid")
+],
     coursesAppController.uploadCourseAppearance);
 
 //PUT /course-appearances/update/:id
 router.put(
     '/update/:courseAppId', [
-        body('name')
+    body('name')
         .trim()
         .not().isEmpty(),
-        body('examDuration'),
-        body('isExamWithMatearials'),
-        body('examsDateA'),
-        body('examsDateB')
-        //.isDate().withMessage("The date is not valid")
-    ],
+    body('examDuration'),
+    body('isExamWithMatearials'),
+    body('examsDateA'),
+    body('examsDateB')
+    //.isDate().withMessage("The date is not valid")
+],
     coursesAppController.updateCourseApp);
 
 //PUT /course-appearances/add-student/:courseAppId
 router.put(
     '/add-student/:courseAppId', //TESTED ,TODO - add admin permissions
     isAuth, [
-        body('userId')
-    ], coursesAppController.addStudent);
+    body('userId')
+], coursesAppController.addStudent);
 
 //PUT /delete-student/:courseAppId
 router.put(

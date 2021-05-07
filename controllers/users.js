@@ -120,14 +120,55 @@ exports.loginUser = async (req, res, next) => {
       userId: loadedUser._id.toString()
     }
       , userConstants.HASH_KEY_CODE
-      //,{expiresIn:'6h'}
+      , { expiresIn: '6h' }
     );
     res.status(200).json({ token: token, user: user, userId: loadedUser._id.toString() });
   } catch (err) {
     next(err);
   }
 };
+exports.loginUserToExam = async (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  console.log(email);
+  let loadedUser;
+  try {
+    const user = await User.findOne({ email: email }).populate("examsDirectories");
+    if (!user) {
+      const error = new Error('Could not find user.');
+      error.statusCode = 401;
+      throw error;
+    }
+    loadedUser = user;
+    console.log(password);
+    console.log(user.password);
+    const isEqual = await bcrypt.compare(password, user.password);
+    if (!isEqual) {
+      const error = new Error('Incorrect password.');
+      error.statusCode = 401;
+      throw error;
+    }
+    const token = webToken.sign({
+      email: loadedUser.email,
+      userId: loadedUser._id.toString()
+    }
+      , userConstants.HASH_KEY_CODE
 
+    );
+    const userToUpdate = new User({
+      email: loadedUser.email,
+      name: loadedUser.name,
+      imageUrl: loadedUser.imageUrl,
+      password: loadedUser.password,
+      role: loadedUser.role,
+      isLoggedToExam: true
+    });
+    User.updateOne({ _id: 'user._id' }, { isLoggedToExam: 'true' });
+    res.status(200).json({ token: token, user: user, userId: loadedUser._id.toString() });
+  } catch (err) {
+    next(err);
+  }
+};
 exports.updateUser = async (req, res, next) => { //TODO : Test
   // const password = req.body.password;
   let loadedUser;
@@ -218,6 +259,8 @@ exports.followCourse = async (req, res, next) => {
     }
     user = await user.save();
     course = await course.save();
+    user = await User.findById(userId).populate("followedCourses");
+
     res.status(201).json({ user: user });
   } catch (err) {
     next(err);
@@ -242,6 +285,8 @@ exports.unFollowCourse = async (req, res, next) => {
     console.log(user.followCourse);
     user = await user.save();
     course = await course.save();
+    user = await User.findById(userId).populate("followedCourses");
+
     res.status(201).json({ user: user });
   } catch (err) {
     next(err);
@@ -271,6 +316,10 @@ exports.getUserDirectories = async (req, res, next) => {
 
   }
 
-
 }
+
+exports.getUsersFromMoodleApi = async (req, res, next) => {
+  
+};
+
 

@@ -3,6 +3,7 @@
     "HASH_KEY_CODE":"somesupersecret",
     "Role":{
         "ADMIN" : "ADMIN",
-        "USER" : "USER"
+        "USER" : "USER",
+        "Lecturer": "LECTURER"
     }
 }
