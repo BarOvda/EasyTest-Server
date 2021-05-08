@@ -56,7 +56,7 @@ router.post('/login', //TESTED
     body('password')
       .trim()
       .isLength({ min: 5 })
-  ], usersController.loginUserToExam);
+  ], usersController.loginUser);
 // PUT /users/update-details
 router.put(//TESTED
   '/update-details',

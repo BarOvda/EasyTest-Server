@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 
 exports.getFeed = async (req, res, next) => {
     const userId = req.userId;
-    console.log(userId);
     const currentPage = req.query.page || 0;
     const perPage = feedConstants.NUM_OF_SUMMARIES_PER_PAGE;
     try {
@@ -27,15 +26,13 @@ exports.getFeed = async (req, res, next) => {
             }
         });
 
-        console.log(appearancesIds);
         var i;
         let feed = [];
         for (i = 0; i < appearancesIds.length; i++) {
             let sum = await Summary.find({ courseAppearance: appearancesIds[i], isPrivate: false })
-                .populate("owner");
+                .populate("owner").populate("courseAppearance");
             feed.push.apply(feed, sum);
         }
-        console.log(feed);
         res.status(200).json({ data: feed });
     } catch (err) {
         next(err);

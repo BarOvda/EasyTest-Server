@@ -33,9 +33,16 @@ const courseAppearanceSchema = new Schema({
    }
    ,
    students: [{
+      student:{
       type: Schema.Types.ObjectId,
       ref: 'User'
-   }]
+   },
+   loggedIn:{
+      type: Boolean,
+      default: false
+   }
+}
+]
 
 });
 

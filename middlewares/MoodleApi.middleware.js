@@ -24,7 +24,6 @@ exports.getCoursesFromMoodleSite = async (req, res, next) => {
 
 }
 
-
 exports.getEnrolledUsersForCourses = async (req, res, next) => {
     const moodleUrl = req.body.url;
     const apiKey = req.body.key;
@@ -35,7 +34,6 @@ exports.getEnrolledUsersForCourses = async (req, res, next) => {
             console.log(body.response);
             res.body.data = body.response;
         });
-
 }
 
 

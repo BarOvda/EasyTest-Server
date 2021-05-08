@@ -96,19 +96,18 @@ exports.createUser = async (req, res, next) => {
 exports.loginUser = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  console.log(email);
   let loadedUser;
   try {
-
+    
     const user = await User.findOne({ email: email }).populate("examsDirectories").populate("followedCourses");
+    console.log(user);
+
     if (!user) {
       const error = new Error('Could not find user.');
       error.statusCode = 401;
       throw error;
     }
     loadedUser = user;
-    console.log(password);
-    console.log(user.password);
     const isEqual = await bcrypt.compare(password, user.password);
     if (!isEqual) {
       const error = new Error('Incorrect password.');
@@ -122,53 +121,18 @@ exports.loginUser = async (req, res, next) => {
       , userConstants.HASH_KEY_CODE
       , { expiresIn: '6h' }
     );
-    res.status(200).json({ token: token, user: user, userId: loadedUser._id.toString() });
-  } catch (err) {
-    next(err);
+    let courseAppId;
+    if(req.body.courseAppId) courseAppId = req.body.courseAppId;
+    if(courseAppId){
+    CourseAppearance.updateOne({ _id: 'courseAppId', 'students.student':'user._id'}, { 'students.loggedIn': true });
   }
-};
-exports.loginUserToExam = async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  console.log(email);
-  let loadedUser;
-  try {
-    const user = await User.findOne({ email: email }).populate("examsDirectories");
-    if (!user) {
-      const error = new Error('Could not find user.');
-      error.statusCode = 401;
-      throw error;
-    }
-    loadedUser = user;
-    console.log(password);
-    console.log(user.password);
-    const isEqual = await bcrypt.compare(password, user.password);
-    if (!isEqual) {
-      const error = new Error('Incorrect password.');
-      error.statusCode = 401;
-      throw error;
-    }
-    const token = webToken.sign({
-      email: loadedUser.email,
-      userId: loadedUser._id.toString()
-    }
-      , userConstants.HASH_KEY_CODE
 
-    );
-    const userToUpdate = new User({
-      email: loadedUser.email,
-      name: loadedUser.name,
-      imageUrl: loadedUser.imageUrl,
-      password: loadedUser.password,
-      role: loadedUser.role,
-      isLoggedToExam: true
-    });
-    User.updateOne({ _id: 'user._id' }, { isLoggedToExam: 'true' });
     res.status(200).json({ token: token, user: user, userId: loadedUser._id.toString() });
   } catch (err) {
     next(err);
   }
 };
+
 exports.updateUser = async (req, res, next) => { //TODO : Test
   // const password = req.body.password;
   let loadedUser;
@@ -241,6 +205,9 @@ exports.getVailidExam = async (req, res, next) => {
     if (!directory)
       throw new Error("There is not directory for this student in this course");
 
+
+
+      
     res.status(200).json({ directory: directory, course: course });
   } catch (err) {
     next(err);

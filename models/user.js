@@ -25,11 +25,11 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  isLoggedToExam: {
-    type: Boolean,
-    required: false
-  }
-  ,
+  // isLoggedToExam: {
+  //   type: Boolean,
+  //   required: false
+  // }
+  // ,
   uploadedSummaries:[{
     type: Schema.Types.ObjectId, 
     ref: 'Summary' 

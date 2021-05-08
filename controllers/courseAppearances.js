@@ -48,21 +48,24 @@ exports.uploadCourseAppearance = async (req, res, next) => {
 };
 exports.deleteStudent = async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
-    const userId = req.body.userId;
+    const userId = mongoose.Types.ObjectId(q.body.userId);
     try {
-        const course = await CourseAppearance.findById(courseAppId);
+        const course = await CourseAppearance.findById(courseId);
         const user = await User.findById(userId);
 
         if (!course || !user)
             throw new Error("invalid course or student");
         const index = course.students.indexOf(userId);
 
+        course.students.foreach(element => {
+            if (element.student == userId) {
+                let index = course.students.indexOf(tuple);
+                course.students.splice(index, 1);
+                course.save();
+            }
+        })
 
-        if (index > -1) {
-            course.students.splice(index, 1);
-            course.save();
 
-        }
 
         console.log(res);
 
@@ -77,7 +80,7 @@ exports.deleteStudent = async (req, res, next) => {
 //TODO create exam directory with user and course details
 exports.addStudent = async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
-    const userId = req.body.userId;
+    const userId = mongoose.Types.ObjectId(req.body.userId);
     try {
         const course = await CourseAppearance.findById(courseId);
         const user = await User.findById(userId);
@@ -87,8 +90,11 @@ exports.addStudent = async (req, res, next) => {
             throw new Error("invalid course or student");
         console.log("sdas");
 
-        if (course.students.indexOf(userId) === -1)
-            course.students.push(userId);
+        course.students.foreach(element => {
+            if (element.student == userId)
+                course.students.push(userId);
+        });
+
         course.save();
 
         console.log(res);
