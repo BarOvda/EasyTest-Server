@@ -70,7 +70,8 @@ exports.getAllCourses = async(req, res, next) => {
     const userId = req.userId;
 
     try {
-        const courses = await Course.find()
+        const courses = await Course.find().populate('appearances');
+ 
         res.status(200).json({ courses: courses });
     } catch (err) {
         next(err);

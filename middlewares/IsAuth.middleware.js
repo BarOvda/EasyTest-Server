@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const userConstants = require('../constants/users.json')
 
 module.exports = (req, res, next) => {
-  console.log("test");
    const authHeader = req.get('Authorization');
   try {
     if (!authHeader) {
@@ -10,7 +9,6 @@ module.exports = (req, res, next) => {
           error.statusCode = 422;
           next(error);
     }
-    console.log(authHeader);
 
     const token = authHeader.split(' ')[1];
     let decodedToken;
@@ -21,7 +19,6 @@ module.exports = (req, res, next) => {
 
       throw new Error.statusCode(401)('Not authenticated.');
     }
-   // console.log("here");
 
     req.userId = decodedToken.userId;
 } catch (err) {

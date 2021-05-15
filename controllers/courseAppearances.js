@@ -48,30 +48,34 @@ exports.uploadCourseAppearance = async (req, res, next) => {
 };
 exports.deleteStudent = async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
-    const userId = mongoose.Types.ObjectId(q.body.userId);
+    const userId = mongoose.Types.ObjectId(req.body.userId);
     try {
-        const course = await CourseAppearance.findById(courseId);
+        const course = await CourseAppearance.findById(courseId).populate("students.student");
         const user = await User.findById(userId);
 
         if (!course || !user)
             throw new Error("invalid course or student");
-        const index = course.students.indexOf(userId);
 
-        course.students.foreach(element => {
-            if (element.student == userId) {
-                let index = course.students.indexOf(tuple);
-                course.students.splice(index, 1);
-                course.save();
-            }
-        })
+          //  console.log(course)
 
+        if (course.students != []) {
+            
+            course.students.forEach(element => {
+                console.log(element.student._id)
+                console.log(userId)
+                if (element.student._id.toString() == req.body.userId) {
+                    console.log("yssss");
+                    let index = course.students.indexOf(element);
+                    course.students.splice(index, 1);
+                    course.save();
+                }
+            })
+        }
 
-
-        console.log(res);
 
         res.status(200).json("The student Deleted succesfuly.");
     } catch (err) {
-        console.log(err);
+       // console.log(err);
         next(err);
     }
 
@@ -88,16 +92,25 @@ exports.addStudent = async (req, res, next) => {
         console.log(userId);
         if (!course || !user)
             throw new Error("invalid course or student");
-        console.log("sdas");
+        console.log(course);
 
-        course.students.foreach(element => {
-            if (element.student == userId)
-                course.students.push(userId);
-        });
+        let studentsArry = course.students.map(element => {
+            return element.student;
+        })
+        let newStudent = { student: userId, loggedIn: false }
+        if (studentsArry != []) {
+            course.students.push(newStudent)
+        }
+        else if (studentsArry.indexOf(userId == -1)) {
+            course.students.push(newStudent)
+
+        } else {
+
+        }
 
         course.save();
 
-        console.log(res);
+        console.log(course);
 
         res.status(200).json("The student Added succesfuly.");
     } catch (err) {
@@ -109,8 +122,8 @@ exports.getStudents = async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
 
     try {
-        const course = await CourseAppearance.findById(courseId);
-
+        const course = await CourseAppearance.findById(courseId).populate("students.student");
+        console.log(course)
         if (!course)
             throw new Error("invalid course");
 

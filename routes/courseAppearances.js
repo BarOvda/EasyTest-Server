@@ -40,10 +40,10 @@ router.put(
     body('userId')
 ], coursesAppController.addStudent);
 
-//PUT /delete-student/:courseAppId
+//PUT /course-appearances/delete-student/:courseAppId
 router.put(
     '/delete-student/:courseAppId', //TESTED ,TODO - add admin permissions
-    isAuth, coursesAppController.deleteStudent);
+    isAuth,body('userId'), coursesAppController.deleteStudent);
 
 //GET /course-appearances/students/:courseAppId
 router.get(
