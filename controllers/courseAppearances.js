@@ -56,10 +56,10 @@ exports.deleteStudent = async (req, res, next) => {
         if (!course || !user)
             throw new Error("invalid course or student");
 
-          //  console.log(course)
+        //  console.log(course)
 
         if (course.students != []) {
-            
+
             course.students.forEach(element => {
                 console.log(element.student._id)
                 console.log(userId)
@@ -75,7 +75,7 @@ exports.deleteStudent = async (req, res, next) => {
 
         res.status(200).json("The student Deleted succesfuly.");
     } catch (err) {
-       // console.log(err);
+        // console.log(err);
         next(err);
     }
 
@@ -85,6 +85,7 @@ exports.deleteStudent = async (req, res, next) => {
 exports.addStudent = async (req, res, next) => {
     const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
     const userId = mongoose.Types.ObjectId(req.body.userId);
+    req.body.courseId = courseId;
     try {
         const course = await CourseAppearance.findById(courseId);
         const user = await User.findById(userId);
@@ -109,10 +110,14 @@ exports.addStudent = async (req, res, next) => {
         }
 
         course.save();
+        if (course.exams.withMaterials == true ){
+            console.log("with Mat")
+            req.createDirectory = true
+        }
+        
 
-        console.log(course);
-
-        res.status(200).json("The student Added succesfuly.");
+        //res.status(200).json("The student Added succesfuly.");
+        next();
     } catch (err) {
         console.log(err);
         next(err);

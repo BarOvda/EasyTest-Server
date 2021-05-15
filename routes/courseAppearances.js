@@ -2,6 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const isAuth = require('../middlewares/IsAuth.middleware');
 const coursesAppController = require('../controllers/courseAppearances');
+const ExamDirController = require('../controllers/examDirectories');
 
 const router = express.Router();
 
@@ -38,7 +39,7 @@ router.put(
     '/add-student/:courseAppId', //TESTED ,TODO - add admin permissions
     isAuth, [
     body('userId')
-], coursesAppController.addStudent);
+], coursesAppController.addStudent,ExamDirController.createDirectory);
 
 //PUT /course-appearances/delete-student/:courseAppId
 router.put(

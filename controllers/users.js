@@ -185,23 +185,24 @@ exports.getVailidExam = async (req, res, next) => {
         $and: [
           { "exams.exam": { $lte: upperDateLimit } },
           { "exams.exam": { $gte: lowerDateLimit } },
-          { students: userId }
+          { "students.student": userId }
         ]
       }, {
         $and: [
           { "exams.remake": { $lte: upperDateLimit } },
           { "exams.remake": { $gte: lowerDateLimit } },
-          { students: userId }
+          { "students.student": userId }
         ]
       }]
     });
-    console.log(course);
+   // console.log(course);
     if (!course)
       throw new Error("There is not valid course");
-    console.log(course);
 
     const directory = await ExamDirectory.findOne({ owner: userId, courseId: course._id })
       .populate("summaries");
+      console.log(directory);
+
     if (!directory)
       throw new Error("There is not directory for this student in this course");
 

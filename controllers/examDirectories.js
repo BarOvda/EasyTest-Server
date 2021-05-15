@@ -7,9 +7,19 @@ const awsAPI = require('../helpers/awsAPI');
 
 
 exports.createDirectory = async (req, res, next) => {
-  const courseId = mongoose.Types.ObjectId(req.params.courseId);
-  const ownerId = req.userId;
+  console.log("false")
+
+  const courseId = mongoose.Types.ObjectId(req.body.courseId);
+  const ownerId = mongoose.Types.ObjectId(req.body.userId);
+  console.log(ownerId)
+  console.log(courseId)
   try {
+    if (req.createDirectory != true) {
+      console.log("false")
+      const error = new Error('Validation failed.');
+      error.statusCode = 422;
+      next(error);
+    }
     const courseExists = await CourseAppearance.exists({ _id: courseId });
     const userExists = await User.findById(ownerId);
 
@@ -23,10 +33,12 @@ exports.createDirectory = async (req, res, next) => {
       owner: ownerId,
       courseId: courseId
     })
-
     const directory = await examDirectory.save();
     userExists.examsDirectories.push(directory);
+    console.log("in here");
     const userRes = await userExists.save();
+    console.log("in here");
+
     res.status(201).json({ directory: directory, user: userRes });
   } catch (error) {
     next(error);
@@ -105,7 +117,7 @@ exports.removeFileFromDirectory = async (req, res, next) => {
       if (element._id.equals(summaryId))
         summary = element;
     });
-     
+
     // console.log(summary);
 
     directory.summaries.pull({ _id: summaryId });
