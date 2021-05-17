@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 const webToken = require('jsonwebtoken');
@@ -92,15 +93,40 @@ exports.createUser = async (req, res, next) => {
   }
 
 };
+exports.logoutUser = async (req, res, next) => {
+  const userId = req.userId;
+  const courseAppId = mongoose.Types.ObjectId(req.body.courseAppId);
+  console.log(userId)
+  console.log(courseAppId)
+  try {
+    const user = await User.findById(userId);
 
+    if (courseAppId) {
+
+      let course = await CourseAppearance.findById(courseAppId);
+      course.students.forEach(element => {
+        if (element.student.toString() == user._id.toString()) {
+
+          element.loggedIn = 'false';
+        }
+
+      });
+      await course.save();
+
+      res.status(201).json({ message: "Logout succesfully" });
+    }
+
+  } catch (err) {
+    next(err);
+  }
+}
 exports.loginUser = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   let loadedUser;
   try {
-    
+
     const user = await User.findOne({ email: email }).populate("examsDirectories").populate("followedCourses");
-    console.log(user);
 
     if (!user) {
       const error = new Error('Could not find user.');
@@ -122,10 +148,25 @@ exports.loginUser = async (req, res, next) => {
       , { expiresIn: '6h' }
     );
     let courseAppId;
-    if(req.body.courseAppId) courseAppId = req.body.courseAppId;
-    if(courseAppId){
-    CourseAppearance.updateOne({ _id: 'courseAppId', 'students.student':'user._id'}, { 'students.loggedIn': true });
-  }
+    if (req.body.courseAppId) courseAppId = mongoose.Types.ObjectId(req.body.courseAppId);
+    if (courseAppId) {
+
+      let course = await CourseAppearance.findById(courseAppId);
+      course.students.forEach(element => {
+        if (element.student.toString() == user._id.toString()) {
+          if (element.loggedIn.toString() == 'true') {
+            const error = new Error('already logedIn');
+            error.statusCode = 500;
+            throw error;
+          } else {
+            element.loggedIn = 'true';
+          }
+        }
+      });
+
+      await course.save();
+
+    }
 
     res.status(200).json({ token: token, user: user, userId: loadedUser._id.toString() });
   } catch (err) {
@@ -195,20 +236,20 @@ exports.getVailidExam = async (req, res, next) => {
         ]
       }]
     });
-   // console.log(course);
+    // console.log(course);
     if (!course)
       throw new Error("There is not valid course");
 
     const directory = await ExamDirectory.findOne({ owner: userId, courseId: course._id })
       .populate("summaries");
-      console.log(directory);
+    console.log(directory);
 
     if (!directory)
       throw new Error("There is not directory for this student in this course");
 
 
 
-      
+
     res.status(200).json({ directory: directory, course: course });
   } catch (err) {
     next(err);
@@ -287,7 +328,7 @@ exports.getUserDirectories = async (req, res, next) => {
 }
 
 exports.getUsersFromMoodleApi = async (req, res, next) => {
-  
+
 };
 
 

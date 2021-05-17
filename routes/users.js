@@ -57,6 +57,15 @@ router.post('/login', //TESTED
       .trim()
       .isLength({ min: 5 })
   ], usersController.loginUser);
+
+// POST /users/logout
+router.post('/logout',
+  isAuth,
+  [
+    body('courseAppId')
+
+  ], usersController.logoutUser);
+
 // PUT /users/update-details
 router.put(//TESTED
   '/update-details',
