@@ -96,8 +96,7 @@ exports.createUser = async (req, res, next) => {
 exports.logoutUser = async (req, res, next) => {
   const userId = req.userId;
   const courseAppId = mongoose.Types.ObjectId(req.body.courseAppId);
-  console.log(userId)
-  console.log(courseAppId)
+
   try {
     const user = await User.findById(userId);
 
