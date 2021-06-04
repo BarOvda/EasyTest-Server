@@ -40,13 +40,7 @@ exports.getFeed = async (req, res, next) => {
             feed.push.apply(feed, sums);
 
             sums.forEach(sum => {
-                // console.log("new summary------------")
-                // console.log(sum)
-                if (sum.usersRank != null) {
-                    total_rankers += sum.usersRank.length;
-                    console.log(sum.usersRank.length)
 
-                }
                 if (sum.rank != null) {
                     avg_sum += sum.rank;
                     console.log(sum.rank)
@@ -55,14 +49,12 @@ exports.getFeed = async (req, res, next) => {
 
         }
         console.log("avg_sum " + avg_sum)
-        console.log("total_rankers " + total_rankers)
-        // console.log(feed)
+        console.log(feed)
         avg_sum = avg_sum / feed.length;
         feed.sort(function (a, b) {
-            let bayesian_score_a = FeedUtils.bayesianScore(a, avg_sum, total_rankers);
-            let bayesian_score_b = FeedUtils.bayesianScore(b, avg_sum, total_rankers);
-            return bayesian_score_b-bayesian_score_a;
-
+            let bayesian_score_a = FeedUtils.bayesianScore(a, avg_sum);
+            let bayesian_score_b = FeedUtils.bayesianScore(b, avg_sum);
+            return bayesian_score_b - bayesian_score_a;
         })
         res.status(200).json({ data: feed });
     } catch (err) {
