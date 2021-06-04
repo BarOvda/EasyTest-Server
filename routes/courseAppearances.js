@@ -39,17 +39,21 @@ router.put(
     '/add-student/:courseAppId', //TESTED ,TODO - add admin permissions
     isAuth, [
     body('userId')
-], coursesAppController.addStudent,ExamDirController.createDirectory);
+], coursesAppController.addStudent, ExamDirController.createDirectory);
 
 //PUT /course-appearances/delete-student/:courseAppId
 router.put(
     '/delete-student/:courseAppId', //TESTED ,TODO - add admin permissions
-    isAuth,body('userId'), coursesAppController.deleteStudent);
+    isAuth, body('userId'), coursesAppController.deleteStudent);
 
 //GET /course-appearances/students/:courseAppId
 router.get(
     '/students/:courseAppId', //TODO -test
     isAuth, coursesAppController.getStudents);
-
+   //GET /course-appearances/students/report/:courseAppId
+ 
+router.get(
+    '/students/report/:courseAppId', //TODO -test
+    isAuth, coursesAppController.getReport);
 
 module.exports = router;

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Course = require('../models/course');
 const feedConstants = require('../constants/feed.json');
 const courseAppearance = require('../models/courseAppearance');
-exports.uploadCourse = async(req, res, next) => {
+exports.uploadCourse = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed.');
@@ -23,7 +23,7 @@ exports.uploadCourse = async(req, res, next) => {
         return next(err);
     }
 };
-exports.getUnfollowedCourses = async(req, res, next) => {
+exports.getUnfollowedCourses = async (req, res, next) => {
     console.log("here");
 
     const userId = req.userId;
@@ -41,13 +41,13 @@ exports.getUnfollowedCourses = async(req, res, next) => {
         res
             .status(200)
 
-        .json({ courses: courses, items_per_page: perPage, current_page: currentPage + 1, total_items: totalCount });
+            .json({ courses: courses, items_per_page: perPage, current_page: currentPage + 1, total_items: totalCount });
     } catch (err) {
 
         next(err);
     }
 };
-exports.getFollowedCourses = async(req, res, next) => {
+exports.getFollowedCourses = async (req, res, next) => {
     const userId = req.userId;
     const currentPage = (+req.query.page || 1) - 1;
     const perPage = +req.query.per_page;
@@ -61,23 +61,23 @@ exports.getFollowedCourses = async(req, res, next) => {
         res
             .status(200)
 
-        .json({ courses: courses, items_per_page: perPage, current_page: currentPage + 1, total_items: totalCount });
+            .json({ courses: courses, items_per_page: perPage, current_page: currentPage + 1, total_items: totalCount });
     } catch (err) {
         next(err);
     }
 };
-exports.getAllCourses = async(req, res, next) => {
+exports.getAllCourses = async (req, res, next) => {
     const userId = req.userId;
 
     try {
         const courses = await Course.find().populate('appearances');
- 
+
         res.status(200).json({ courses: courses });
     } catch (err) {
         next(err);
     }
 };
-exports.searchByKeyWord = async(req, res, next) => {
+exports.searchByKeyWord = async (req, res, next) => {
 
     const keyWord = req.body.keyWord;
     console.log(keyWord);
@@ -99,7 +99,7 @@ exports.searchByKeyWord = async(req, res, next) => {
         next(err);
     }
 };
-exports.getAllCourseAppearances = async(req, res, next) => {
+exports.getAllCourseAppearances = async (req, res, next) => {
     const courseId = req.params.courseId;
     try {
         const course = await Course.findById(courseId).populate('appearances');
@@ -114,7 +114,7 @@ exports.getAllCourseAppearances = async(req, res, next) => {
 
 
 
-exports.updateCourse = async(req, res, next) => { //TODO : Test
+exports.updateCourse = async (req, res, next) => { //TODO : Test
     let loadedCourse;
     const courseId = req.params.courseId;
     try {
@@ -135,7 +135,7 @@ exports.updateCourse = async(req, res, next) => { //TODO : Test
     }
 };
 
-exports.deleteCourse = async(req, res, next) => { //TODO : Test
+exports.deleteCourse = async (req, res, next) => { //TODO : Test
     const courseId = req.params.courseId;
     try {
         const course = await Course.findByIdAndDelete(courseId);
@@ -152,18 +152,21 @@ exports.deleteCourse = async(req, res, next) => { //TODO : Test
         next(err);
     }
 };
-exports.deleteAppearance = async(req, res, next) => { //TODO : Test
+exports.deleteAppearance = async (req, res, next) => { //TODO : Test
 
 
     try {
         console.log(req.body.appId);
         const appId = req.body.appId;
         const courseApp = await courseAppearance.findById(appId);
-
-        if ( !courseApp)
+        console.log(courseApp)
+        if (!courseApp)
             throw new Error("invalid course or Appearance.");
-        const course = Course.findById(courseApp.courseId);
-            const index = course.appearances.indexOf(appId);
+
+        const course_id = mongoose.Types.ObjectId(courseApp._id)
+        const course = await Course.findById(course_id);
+        const index = course.appearances.indexOf(appId);
+        console.log(course)
 
         if (index > -1) {
             course.appearances.splice(index, 1);

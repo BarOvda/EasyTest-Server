@@ -110,11 +110,11 @@ exports.addStudent = async (req, res, next) => {
         }
 
         course.save();
-        if (course.exams.withMaterials == true ){
+        if (course.exams.withMaterials == true) {
             console.log("with Mat")
             req.createDirectory = true
         }
-        
+
 
         //res.status(200).json("The student Added succesfuly.");
         next();
@@ -181,3 +181,28 @@ exports.deleteCourse = async (req, res, next) => { //TODO : Test
         next(err);
     }
 };
+exports.getReport = async (req, res, next) => { //TODO : Test
+    const courseId = mongoose.Types.ObjectId(req.params.courseAppId);
+    try {
+        const course = await CourseAppearance.findById(courseId).populate({
+
+            path: 'students.student',
+            model: 'User'
+        })
+        console.log(course.students)
+        var violated_students = course.students.filter(element => {
+            element.loginCounts > 1;
+        })
+
+        if (!course) {
+            const error = new Error('Could not find the course.');
+            error.statusCode = 401;
+            throw error;
+        }
+
+        res.status(200).json({ students: violated_students });
+    } catch (err) {
+        next(err);
+    }
+};
+

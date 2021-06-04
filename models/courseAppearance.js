@@ -33,16 +33,25 @@ const courseAppearanceSchema = new Schema({
    }
    ,
    students: [{
-      student:{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-   },
-   loggedIn:{
-      type: Boolean,
-      default: false
+      student: {
+         type: Schema.Types.ObjectId,
+         ref: 'User'
+      },
+      loggedIn: {
+         type: Boolean,
+         default: false
+      },
+      loginCounts:{
+         type: Number,
+         default: 0
+      },
+      loginDates:[{
+         type: Date
+         , default: Date.now() //onlyForTesting!
+
+      }]
    }
-}
-]
+   ]
 
 });
 

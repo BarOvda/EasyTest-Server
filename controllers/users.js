@@ -153,12 +153,15 @@ exports.loginUser = async (req, res, next) => {
       let course = await CourseAppearance.findById(courseAppId);
       course.students.forEach(element => {
         if (element.student.toString() == user._id.toString()) {
+
           if (element.loggedIn.toString() == 'true') {
             const error = new Error('already logedIn');
             error.statusCode = 500;
             throw error;
           } else {
             element.loggedIn = 'true';
+            element.loginCounts = element.loginCounts + 1;
+            element.loginDates.push(Date.now())
           }
         }
       });
