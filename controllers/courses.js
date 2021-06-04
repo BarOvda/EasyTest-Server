@@ -154,23 +154,22 @@ exports.deleteCourse = async(req, res, next) => { //TODO : Test
 };
 exports.deleteAppearance = async(req, res, next) => { //TODO : Test
 
-    const appId = mongoose.Types.ObjectId(req.body.appId);
-    const courseId = mongoose.Types.ObjectId(req.params.courseId);
 
     try {
+        console.log(req.body.appId);
+        const appId = req.body.appId;
         const courseApp = await courseAppearance.findById(appId);
-        const course = await Course.findById(courseId);
 
-        if (!course || !courseApp)
+        if ( !courseApp)
             throw new Error("invalid course or Appearance.");
-        const index = course.appearances.indexOf(appId);
+        const course = Course.findById(courseApp.courseId);
+            const index = course.appearances.indexOf(appId);
 
         if (index > -1) {
             course.appearances.splice(index, 1);
             course.save();
 
         }
-
         console.log(res);
 
         res.status(200).json("The Appearance Deleted succesfuly.");

@@ -48,6 +48,6 @@ router.put( //TESTED
 // DELETE /courses/:courseId
 router.delete('/:courseId', coursesController.deleteCourse); //TESTED
 
-// DELETE /courses/appearance/:courseId
-router.delete('/appearance/:courseId', [body('appId').trim()], coursesController.deleteAppearance); //TESTED
+// DELETE /courses/appearance/
+router.delete('/appearance/', [body('appId').trim()], coursesController.deleteAppearance); //TESTED
 module.exports = router;
