@@ -36,7 +36,16 @@ exports.getFeed = async (req, res, next) => {
         var avg_sum = 0;
         for (i = 0; i < appearancesIds.length; i++) {
             let sums = await Summary.find({ courseAppearance: appearancesIds[i], isPrivate: false })
-                .populate("owner").populate("courseAppearance");
+                .populate("owner").populate(
+
+                    {
+                        path: 'courseAppearance',
+                        populate: {
+                            path: 'couresId'
+                        }
+                    });
+
+
             feed.push.apply(feed, sums);
 
             sums.forEach(sum => {

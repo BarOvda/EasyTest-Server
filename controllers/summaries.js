@@ -89,7 +89,8 @@ exports.rankUp = async (req, res, next) => {
       summary = await summary.save();
     } else {
       console.log("UPDATE");
-      summary = await summary.updateOne({ "usersRank.user": userId }, summary);
+      summary = null
+      // summary = await summary.updateOne({ "usersRank.user": userId }, summary);
     }
     res.status(200).json({ summary: summary });
   } catch (err) {
@@ -168,11 +169,11 @@ exports.searchByKeyWord = async (req, res, next) => {
       appearnces = appearnces.map(app => app._id);
 
       searchResult = await Summary.find({
-        $text: { $search: keyWord },courseAppearance: {
+        $text: { $search: keyWord }, courseAppearance: {
           $in: [appearnces]
         }, isPrivate: false
       });
-      
+
     }
     console.log(searchResult);
     if (!searchResult)

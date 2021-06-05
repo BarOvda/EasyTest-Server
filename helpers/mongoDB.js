@@ -46,7 +46,7 @@ function readDocs(dirname, onFileContent, onError) {
             var path = dirname + "\\" + filename
             var file = { filename: filename, path: path }
 
-            awsAPI.uploadFile(file, 'files');
+            // awsAPI.uploadFile(file, 'files');
         });
     });
 }
@@ -157,15 +157,31 @@ exports.insertData = async (req, res, next) => {
                 x = 0;
 
             let title = current_doc_name;
-            let pathUrl = `s3://easy-test-s3/files/${current_doc_name}`
+            let pathUrl = `https://easy-test-s3.s3.amazonaws.com/files/${current_doc_name}`
             let owner = users[j]._id;
             let courseAppearance = apps[x]._id;
+            var usersRank = [];
+            var min = Math.ceil(1);
+            var max = Math.floor(6);
+            let avg_ranks = 0
+            users.forEach(user => {
+                let rank = Math.floor(Math.random() * (max - min) + min)
+                var userRank = {
+                    user: user._id,
+                    rank: rank,
+                }
+                avg_ranks += rank;
+                usersRank.push(userRank)
+            })
+            avg_ranks = avg_ranks / users.length
             var sum = {
                 _id: mongoose.Types.ObjectId(),
                 title: title,
                 pathUrl: pathUrl,
                 owner: owner,
-                courseAppearance: courseAppearance
+                courseAppearance: courseAppearance,
+                usersRank: usersRank,
+                rank: avg_ranks
             }
 
             users[j].uploadedSummaries.push(sum._id)
@@ -180,7 +196,6 @@ exports.insertData = async (req, res, next) => {
 
         console.log(err)
     }
-    console.log(summs)
 
     //connect users to apps
     var usersIds = users.map(user => user._id);
