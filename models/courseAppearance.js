@@ -47,7 +47,7 @@ const courseAppearanceSchema = new Schema({
       },
       loginDates:[{
          type: Date
-         , default: Date.now() //onlyForTesting!
+         
 
       }]
    }

@@ -50,10 +50,14 @@ router.put(
 router.get(
     '/students/:courseAppId', //TODO -test
     isAuth, coursesAppController.getStudents);
-   //GET /course-appearances/students/report/:courseAppId
- 
+//GET /course-appearances/students/report/:courseAppId
+
 router.get(
     '/students/report/:courseAppId', //TODO -test
     isAuth, coursesAppController.getReport);
-
+//GET /course-appearances/all
+router.get(
+    '/all', //TODO -test
+    coursesAppController.getAll);
+    // isAuth
 module.exports = router;

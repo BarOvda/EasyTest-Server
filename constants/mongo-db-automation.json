@@ -1,0 +1,225 @@
+{
+    
+    "courses": [
+        {
+            "appearances": [],
+            "followers": [],
+            "name": "Algebra"
+        },
+        {
+            "appearances": [],
+            "followers": [],
+            "name": "Accounting and Finance"
+        },
+        {
+            "appearances": [],
+            "followers": [],
+            "name": "Aeronautical & Manufacturing Engineering"
+        },
+        {
+            "appearances": [],
+            "followers": [],
+            "name": "Anatomy and Physiology"
+        },
+        {
+            "appearances": [],
+            "followers": [],
+            "name": "Anthropology"
+        },
+        {
+            "appearances": [],
+            "followers": [],
+            "name": "Archaeology"
+        },
+        {
+            "appearances": [],
+            "followers": [],
+            "name": "Chemical Engineering"
+        }
+    ],
+    "courseAppearances": [
+        {
+            "exams": {
+                "exam": "2021-05-12T10:50:55.634Z",
+                "remake": "2021-04-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2021 B",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2021-05-12T10:50:55.634Z",
+                "remake": "2021-04-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2021 B",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2021-05-12T10:50:55.634Z",
+                "remake": "2021-04-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2021 B",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2021-05-12T10:50:55.634Z",
+                "remake": "2021-04-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2021 B",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2021-05-12T10:50:55.634Z",
+                "remake": "2021-04-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2021 B",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2020-05-12T10:50:55.634Z",
+                "remake": "2020-03-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2020 A",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2021-06-12T10:50:55.634Z",
+                "remake": "2021-05-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2021 B",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2021-01-12T10:50:55.634Z",
+                "remake": "2021-02-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2021 A",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2019-01-12T10:50:55.634Z",
+                "remake": "2019-02-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2019 A",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2019-05-12T10:50:55.634Z",
+                "remake": "2019-03-11T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2019 B",
+            "couresId": ""
+        },
+        {
+            "exams": {
+                "exam": "2021-06-12T10:50:55.634Z",
+                "remake": "2021-05-18T23:10:40.998Z",
+                "withMaterials": true,
+                "duration": 180
+            },
+            "students": [],
+            "name": "2021 A",
+            "couresId": ""
+        }
+    ],
+    "users": [
+        {
+            "type": "ADMIN",
+            "uploadedSummaries": [],
+            "examsDirectories": [],
+            "followedCourses": [],
+            "email": "bar.o@easy-test.com",
+            "name": "Bar Ovda",
+            "imageUrl": "https://easy-test-s3.s3.amazonaws.com/images/bar",
+            "password": "$2a$12$Tkkif9R3LCBsKQucF.xlauKHugS1IbZBDc/90H5Iz9harJzfpCslq"
+        },
+        {
+            "type": "USER",
+            "uploadedSummaries": [],
+            "examsDirectories": [],
+            "followedCourses": [],
+            "email": "davidpaul22@gmail.com",
+            "name": "David Paul",
+            "imageUrl": "https://easy-test-s3.s3.amazonaws.com/images/david",
+            "password": "$2a$12$Tkkif9R3LCBsKQucF.xlauKHugS1IbZBDc/90H5Iz9harJzfpCslq"
+        },
+        {
+            "type": "LECTURER",
+            "uploadedSummaries": [],
+            "examsDirectories": [],
+            "followedCourses": [],
+            "email": "AbbyJosh72@gmail.com",
+            "name": "Abby Josh",
+            "imageUrl": "https://easy-test-s3.s3.amazonaws.com/images/abby",
+            "password": "$2a$12$Tkkif9R3LCBsKQucF.xlauKHugS1IbZBDc/90H5Iz9harJzfpCslq"
+        },
+        {
+            "type": "USER",
+            "uploadedSummaries": [],
+            "examsDirectories": [],
+            "followedCourses": [],
+            "email": "AbbyJosh72@gmail.com",
+            "name": "Sara Newman",
+            "imageUrl": "https://easy-test-s3.s3.amazonaws.com/images/sara",
+            "password": "$2a$12$Tkkif9R3LCBsKQucF.xlauKHugS1IbZBDc/90H5Iz9harJzfpCslq"
+        },
+        {
+            "type": "USER",
+            "uploadedSummaries": [],
+            "examsDirectories": [],
+            "followedCourses": [],
+            "email": "AbbyJosh72@gmail.com",
+            "name": "Ben Stiller",
+            "imageUrl": "https://easy-test-s3.s3.amazonaws.com/images/ben",
+            "password": "$2a$12$Tkkif9R3LCBsKQucF.xlauKHugS1IbZBDc/90H5Iz9harJzfpCslq"
+        },
+        {
+            "type": "LECTURER",
+            "uploadedSummaries": [],
+            "examsDirectories": [],
+            "followedCourses": [],
+            "email": "AbbyJosh72@gmail.com",
+            "name": "Sho Don",
+            "imageUrl": "https://easy-test-s3.s3.amazonaws.com/images/sho",
+            "password": "$2a$12$Tkkif9R3LCBsKQucF.xlauKHugS1IbZBDc/90H5Iz9harJzfpCslq"
+        }
+    ]
+}

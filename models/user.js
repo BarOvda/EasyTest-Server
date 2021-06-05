@@ -25,23 +25,19 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  // isLoggedToExam: {
-  //   type: Boolean,
-  //   required: false
-  // }
-  // ,
-  uploadedSummaries:[{
-    type: Schema.Types.ObjectId, 
-    ref: 'Summary' 
- }],
- examsDirectories:[{
-   type:Schema.Types.ObjectId,
-   ref:'ExamDirectory'
- }]
-, followedCourses:[{
-  type:Schema.Types.ObjectId,
-   ref:'Course'
- }]
+
+  uploadedSummaries: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Summary'
+  }],
+  examsDirectories: [{
+    type: Schema.Types.ObjectId,
+    ref: 'ExamDirectory'
+  }]
+  , followedCourses: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Course'
+  }]
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -138,6 +138,21 @@ exports.getStudents = async (req, res, next) => {
         next(err);
     }
 };
+exports.getAll = async (req, res, next) => {
+    
+    try {
+        const courses = await CourseAppearance.find().populate("couresId");
+        
+        if (!course)
+            throw new Error("invalid course");
+
+        res.status(200).json({ courses: courses });
+    } catch (err) {
+        console.log(err);
+        next(err);
+    }
+}
+
 
 
 exports.updateCourseApp = async (req, res, next) => { //TODO : Test
@@ -190,10 +205,11 @@ exports.getReport = async (req, res, next) => { //TODO : Test
             model: 'User'
         })
         console.log(course.students)
-        var violated_students = course.students.filter(element => {
-            element.loginCounts > 1;
-        })
-
+        var violated_students = course.students
+        // .filter(element => {
+        //     // element.loginCounts > 1;
+        // })
+        console.log(Date.now())
         if (!course) {
             const error = new Error('Could not find the course.');
             error.statusCode = 401;

@@ -10,7 +10,7 @@ const summarySchema = new Schema({
     
   },
   uploadDate: {
-    type: String,
+    type: Date,
     default: Date.now
   },
   pathUrl: {

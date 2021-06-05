@@ -9,9 +9,10 @@ const courseAppRoutes = require('./routes/courseAppearances');
 const examDirectoriesRoutes = require('./routes/examDirectories');
 const summariesRoutes = require('./routes/summaries');
 const feedRoutes = require('./routes/feed');
+const adminRoutes = require('./routes/admin');
 const app = express();
 
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -30,20 +31,23 @@ app.use('/course-appearances', courseAppRoutes);
 app.use('/exam-directories', examDirectoriesRoutes);
 app.use('/summaries', summariesRoutes);
 app.use('/feed', feedRoutes);
+app.use('/admin', adminRoutes)
 
-app.use((req, res, next) => {res.status(404).json({ message: 'Page not found' });});
+app.use((req, res, next) => { res.status(404).json({ message: 'Page not found' }); });
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
-  const message = error.message||'Server error';
-  const data =error.data||' ';
-  res.status(status).json({ message: message,data:data });
+  const message = error.message || 'Server error';
+  const data = error.data || ' ';
+  res.status(status).json({ message: message, data: data });
 });
 
 mongoose.connect("mongodb+srv://my_user1:1234@cluster0.9h1vb.mongodb.net/easy_test?retryWrites=true&w=majority"
-,{ useNewUrlParser: true 
-, useUnifiedTopology: true,
-useCreateIndex:true})
+  , {
+    useNewUrlParser: true
+    , useUnifiedTopology: true,
+    useCreateIndex: true
+  })
   .then(result => {
     app.listen(8082);
   })

@@ -47,14 +47,14 @@ exports.uploadFile = (file, folder) => {
     });
 
     const extention = file.filename.split('.')[1];
-
+    const name_without_ext = file.filename.split('.')[0];
     // read content from the file
     const fileContent = fs.readFileSync(file.path);
 
     // setting up s3 upload parameters
     const params = {
         Bucket: bucketName,
-        Key: `${folder}/${file.filename}`, // file name you want to save as
+        Key: `${folder}/${name_without_ext}`, // file name you want to save as
         Body: fileContent,
         ContentType: ContentTypes[extention],
         //ContentDisposition : `inline; filename=${folder}/${file.filename}`
