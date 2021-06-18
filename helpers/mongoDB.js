@@ -198,10 +198,10 @@ exports.insertData = async (req, res, next) => {
     }
 
     //connect users to apps
-    var usersIds = users.map(user => user._id);
-    apps.forEach(app => {
-        app.students.push(...usersIds)
-    })
+    // var usersIds = users.map(user => user._id);
+    // apps.forEach(app => {
+    //     app.students.push(...usersIds)
+    // })
 
     //Save data
     try {

@@ -49,7 +49,7 @@ router.put(
 //GET /course-appearances/students/:courseAppId
 router.get(
     '/students/:courseAppId', //TODO -test
-    isAuth, coursesAppController.getStudents);
+     coursesAppController.getStudents);
 //GET /course-appearances/students/report/:courseAppId
 
 router.get(

@@ -153,8 +153,6 @@ exports.getAll = async (req, res, next) => {
     }
 }
 
-
-
 exports.updateCourseApp = async (req, res, next) => { //TODO : Test
     let loadedCourse;
     const courseId = req.params.courseAppId;
