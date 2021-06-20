@@ -47,6 +47,47 @@ router.put( //TESTED
   ],
   usersController.createUser
 );
+// POST /users/login-exam
+router.post('/login-exam', //TESTED 
+  [
+    body('email')
+      .isEmail().withMessage('Please enter a valid email'),
+    body('password')
+      .trim()
+      .isLength({ min: 5 })
+  ], usersController.loginUser);
+
+  // POST /users/login
+router.post('/login', //TESTED 
+[
+  body('email')
+    .isEmail().withMessage('Please enter a valid email'),
+  body('password')
+    .trim()
+    .isLength({ min: 5 })
+], usersController.loginUserExam);
+
+// POST /users/login-admin
+router.post('/login-admin', //TESTED 
+  [
+    body('email')
+      .isEmail().withMessage('Please enter a valid email'),
+    body('password')
+      .trim()
+      .isLength({ min: 5 })
+  ], usersController.loginUserAdminPanel);
+
+  // POST /users/login
+router.post('/login', //TESTED 
+[
+  body('email')
+    .isEmail().withMessage('Please enter a valid email'),
+  body('password')
+    .trim()
+    .isLength({ min: 5 })
+], usersController.loginUserExam);
+
+
 
 // POST /users/login
 router.post('/login', //TESTED 

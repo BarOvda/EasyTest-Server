@@ -47,49 +47,53 @@ exports.createUser = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    const error = new Error('Validation failed.');
+
+
+    const error = new Error(errors.array()[0].msg);
     error.statusCode = 422;
     error.data = errors.array();
     next(error);
-  }
-  let imageUrl;
-
-  if (!req.file) {
-    imageUrl = userConstants["PATH"];
   } else {
 
-    const fileNameUpload = req.file.filename;
-    // Enter the file you want to upload here
 
-    awsAPI.uploadFile(req.file, 'images');
-    imageUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${fileNameUpload}`;
-  }
-  const email = req.body.email;
-  const name = req.body.name;
-  const role = req.body.role || "USER";
-  const password = await bcrypt.hash(req.body.password, 12);
-  const user = new User({
-    email: email,
-    name: name,
-    imageUrl: imageUrl,
-    password: password,
-    role: role
-  });
-  console.log(user);
-  try {
-    const result = await user.save();
+    let imageUrl;
 
-    const token = webToken.sign({
-      email: result.email,
-      userId: result._id.toString()
+    if (!req.file) {
+      imageUrl = userConstants["PATH"];
+    } else {
+
+      let fileNameUpload = req.file.filename;
+      // Enter the file you want to upload here
+      let only_name = fileNameUpload.split(".")[0]
+      awsAPI.uploadFile(req.file, 'images');
+      imageUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${only_name}`;
     }
-      , userConstants.HASH_KEY_CODE
-      //,{expiresIn:'6h'}
-    );
-    res.status(201).json({ token: token, user: result });
+    const email = req.body.email;
+    const name = req.body.name;
+    const role = req.body.role || "USER";
+    const password = await bcrypt.hash(req.body.password, 12);
+    const user = new User({
+      email: email,
+      name: name,
+      imageUrl: imageUrl,
+      password: password,
+      role: role
+    });
+    try {
+      const result = await user.save();
 
-  } catch (err) {
-    next(err);
+      const token = webToken.sign({
+        email: result.email,
+        userId: result._id.toString()
+      }
+        , userConstants.HASH_KEY_CODE
+        //,{expiresIn:'6h'}
+      );
+      res.status(201).json({ token: token, user: result });
+
+    } catch (err) {
+      next(err);
+    }
   }
 
 };
@@ -119,13 +123,143 @@ exports.logoutUser = async (req, res, next) => {
     next(err);
   }
 }
+exports.loginUserAdminPanel = async (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  let loadedUser;
+  try {
+
+    const user = await User.findOne({ email: email }).populate({
+      path: 'examsDirectories',
+      populate: {
+        path: 'courseId',
+        populate: 'couresId'}
+      }).populate("followedCourses");
+
+    if (!user) {
+      const error = new Error('Could not find user.');
+      error.statusCode = 401;
+      throw error;
+    }
+    loadedUser = user;
+    const isEqual = await bcrypt.compare(password, user.password);
+    if (!isEqual) {
+      const error = new Error('Incorrect password.');
+      error.statusCode = 401;
+      throw error;
+    }
+    const token = webToken.sign({
+      email: loadedUser.email,
+      userId: loadedUser._id.toString()
+    }
+      , userConstants.HASH_KEY_CODE
+      , { expiresIn: '6h' }
+    );
+    let courseAppId;
+    if (req.body.courseAppId) courseAppId = mongoose.Types.ObjectId(req.body.courseAppId);
+    if (courseAppId) {
+
+      let course = await CourseAppearance.findById(courseAppId);
+      course.students.forEach(element => {
+        if (element.student.toString() == user._id.toString()) {
+
+          if (element.loggedIn.toString() == 'true') {
+            const error = new Error('already logedIn');
+            error.statusCode = 500;
+            throw error;
+          } else {
+            element.loggedIn = 'true';
+            element.loginCounts = element.loginCounts + 1;
+            element.loginDates.push(Date.now())
+          }
+        }
+      });
+
+      await course.save();
+
+    }
+
+    res.status(200).json({ token: token, user: user, userId: loadedUser._id.toString() });
+  } catch (err) {
+    next(err);
+  }
+
+}
+exports.loginUserExam = async (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  let loadedUser;
+  try {
+
+    const user = await User.findOne({ email: email }).populate({
+      path: 'examsDirectories',
+      populate: {
+        path: 'courseId',
+        populate: 'couresId'}
+      }).populate("followedCourses");
+
+    if (!user) {
+      const error = new Error('Could not find user.');
+      error.statusCode = 401;
+      throw error;
+    }
+    loadedUser = user;
+    const isEqual = await bcrypt.compare(password, user.password);
+    if (!isEqual) {
+      const error = new Error('Incorrect password.');
+      error.statusCode = 401;
+      throw error;
+    }
+    const token = webToken.sign({
+      email: loadedUser.email,
+      userId: loadedUser._id.toString()
+    }
+      , userConstants.HASH_KEY_CODE
+      , { expiresIn: '6h' }
+    );
+    let courseAppId;
+    if (req.body.courseAppId) courseAppId = mongoose.Types.ObjectId(req.body.courseAppId);
+    if (courseAppId) {
+
+      let course = await CourseAppearance.findById(courseAppId);
+      course.students.forEach(element => {
+        if (element.student.toString() == user._id.toString()) {
+
+          if (element.loggedIn.toString() == 'true') {
+            const error = new Error('already logedIn');
+            error.statusCode = 500;
+            throw error;
+          } else {
+            element.loggedIn = 'true';
+            element.loginCounts = element.loginCounts + 1;
+            element.loginDates.push(Date.now())
+          }
+        }
+      });
+
+      await course.save();
+
+    }
+
+    res.status(200).json({ token: token, user: user, userId: loadedUser._id.toString() });
+  } catch (err) {
+    next(err);
+  }
+
+}
+
 exports.loginUser = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   let loadedUser;
   try {
 
-    const user = await User.findOne({ email: email }).populate("examsDirectories").populate("followedCourses");
+    const user = await User.findOne({ email: email }).populate({
+      path: 'examsDirectories',
+      populate: {
+        path: 'courseId',
+        populate: 'couresId'}
+      }).populate("followedCourses");
 
     if (!user) {
       const error = new Error('Could not find user.');
@@ -189,18 +323,19 @@ exports.updateUser = async (req, res, next) => { //TODO : Test
       throw error;
     }
     loadedUser = user;
-    if (req.body.name) loadedUser.name = req.body.name;
-    if (req.body.password) {
-      const password = await bcrypt.hash(req.body.password, 12);
+    // if (req.body.name) loadedUser.name = req.body.name;
+    // if (req.body.password) {
+    //   const password = await bcrypt.hash(req.body.password, 12);
 
-      loadedUser.password = password;
-    }
+    //   loadedUser.password = password;
+    // }
     let imageUrl;
     if (req.file) {
       console.log("file");
-      const fileNameUpload = req.file.filename;
+      let fileNameUpload = req.file.filename;
+      let only_name = fileNameUpload.split(".")[0];
       awsAPI.uploadFile(req.file, `images`);
-      imageUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${fileNameUpload}`;
+      imageUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${only_name}`;
       loadedUser.imageUrl = imageUrl;
     }
     const result = await loadedUser.save();
@@ -311,7 +446,9 @@ exports.getUserDirectories = async (req, res, next) => {
     const user = await User.findById(userId).populate({
       path: 'examsDirectories',
       populate: {
-        path: 'courseId'
+        path: 'courseId',
+        populate: 'couresId'
+
       }
     });
     if (!user) {

@@ -1,6 +1,9 @@
 {
     "PATH":"https://easy-test-s3.s3.amazonaws.com/images/1617200827317-d_user.png",
     "HASH_KEY_CODE":"somesupersecret",
+    "HASH_KEY_CODE_ADMIN":"somesupersecretadmin",
+    "HASH_KEY_CODE_EXAM":"somesupersecretexam",
+
     "Role":{
         "ADMIN" : "ADMIN",
         "USER" : "USER",

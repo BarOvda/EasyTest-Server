@@ -2,18 +2,18 @@ const jwt = require('jsonwebtoken');
 const userConstants = require('../constants/users.json')
 
 module.exports = (req, res, next) => {
-   const authHeader = req.get('Authorization');
+  const authHeader = req.get('Authorization');
   try {
     if (!authHeader) {
       const error = new Error('Validation failed.');
-          error.statusCode = 422;
-          next(error);
+      error.statusCode = 422;
+      next(error);
     }
 
     const token = authHeader.split(' ')[1];
     let decodedToken;
-    
-      decodedToken = jwt.verify(token, userConstants.HASH_KEY_CODE);
+
+    decodedToken = jwt.verify(token, userConstants.HASH_KEY_CODE);
 
     if (!decodedToken) {
 
@@ -21,8 +21,8 @@ module.exports = (req, res, next) => {
     }
 
     req.userId = decodedToken.userId;
-} catch (err) {
-  return next(err);
-}
+  } catch (err) {
+    return next(err);
+  }
   next();
 };

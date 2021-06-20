@@ -19,11 +19,12 @@ exports.getAllSummaries = async (req, res, next) => {
 exports.uploadSummary = async (req, res, next) => {
   console.log(req.file);
   const title = req.file.originalname;
-  const fileNameUpload = req.file.filename;
+  let fileNameUpload = req.file.filename;
+  let only_name = fileNameUpload.split(".")[0];
   // Enter the file you want to upload here
   const folder = 'files';
   awsAPI.uploadFile(req.file, folder);
-  const pathUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${fileNameUpload}`;
+  const pathUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${only_name}`;
   console.log(req.file);
   const owner = mongoose.Types.ObjectId(req.userId);
   const courseAppId = req.params.courseAppId;
@@ -127,8 +128,15 @@ exports.getUsersRank = async (req, res, next) => {
 
 exports.getSummaryDetailes = async (req, res, next) => {
   try {
+
+   
     const summaryId = mongoose.Types.ObjectId(req.params.id);
-    const summary = await Summary.findById(summaryId).populate('usersRank').populate('courseAppearance');//TODO Check it
+    const summary = await Summary.findById(summaryId).populate('usersRank').populate( {
+      path: 'courseAppearance',
+      populate: {
+        path: 'couresId',
+        }
+      });//TODO Check it
     res.status(200).json({ summary: summary });
 
   } catch (err) {
@@ -186,11 +194,12 @@ exports.searchByKeyWord = async (req, res, next) => {
 exports.uploadSummaryToDirectory = async (req, res, next) => {
 
   const title = req.file.originalname;
-  const fileNameUpload = req.file.filename;
+  let fileNameUpload = req.file.filename;
+  let only_name = fileNameUpload.split(".")[0]
   // Enter the file you want to upload here
   const folder = 'files';
   awsAPI.uploadFile(req.file, folder);
-  const pathUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${fileNameUpload}`;
+  const pathUrl = `https://easy-test-s3.s3.amazonaws.com/${folder}/${only_name}`;
   console.log(req.file);
   const owner = req.userId;
   const directoryId = req.params.directoryId;

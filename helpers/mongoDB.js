@@ -46,7 +46,7 @@ function readDocs(dirname, onFileContent, onError) {
             var path = dirname + "\\" + filename
             var file = { filename: filename, path: path }
 
-            // awsAPI.uploadFile(file, 'files');
+             awsAPI.uploadFile(file, 'files');
         });
     });
 }
